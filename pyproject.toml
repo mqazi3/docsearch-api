@@ -1,0 +1,19 @@
+[project]
+name = "docsearch-api"
+version = "0.1.0"
+requires-python = ">=3.13"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's Depends() in default arguments is the intended pattern.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
