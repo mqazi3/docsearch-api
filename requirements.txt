@@ -4,3 +4,6 @@ sqlalchemy>=2.0
 psycopg[binary]>=3.2
 redis>=5.0
 pydantic-settings>=2.4
+alembic>=1.13
+pgvector>=0.3
+python-multipart>=0.0.9
