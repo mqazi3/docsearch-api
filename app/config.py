@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6380/0"
     environment: str = "development"
     app_version: str = "0.1.0"
+    upload_dir: str = "data/uploads"
+    max_upload_mb: int = 25
 
 
 @lru_cache

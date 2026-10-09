@@ -9,10 +9,15 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY alembic.ini .
+COPY alembic ./alembic
 COPY app ./app
 
 # Don't run as root inside the container.
-RUN useradd --create-home appuser
+# Non-root user, plus an upload folder it owns.
+RUN useradd --create-home appuser \
+    && mkdir -p /data/uploads \
+    && chown appuser:appuser /data/uploads
 USER appuser
 
 EXPOSE 8000

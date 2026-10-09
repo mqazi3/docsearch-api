@@ -25,18 +25,31 @@ services:
       timeout: 3s
       retries: 10
 
+  migrate:
+    build: .
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://docsearch:docsearch@db:5432/docsearch
+    depends_on:
+      db:
+        condition: service_healthy
+
   api:
     build: .
     environment:
       DATABASE_URL: postgresql+psycopg://docsearch:docsearch@db:5432/docsearch
       REDIS_URL: redis://redis:6379/0
+      UPLOAD_DIR: /data/uploads
     ports:
       - "8000:8000"
+    volumes:
+      - uploads:/data/uploads
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       redis:
         condition: service_healthy
 
 volumes:
   pgdata:
+  uploads:

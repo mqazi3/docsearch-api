@@ -7,7 +7,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
 
     services:
       postgres:
@@ -35,12 +36,13 @@ jobs:
 
     env:
       DATABASE_URL: postgresql+psycopg://docsearch:docsearch@localhost:5432/docsearch
+      TEST_DATABASE_URL: postgresql+psycopg://docsearch:docsearch@localhost:5432/docsearch_test
       REDIS_URL: redis://localhost:6379/0
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
           cache: pip
@@ -53,6 +55,12 @@ jobs:
 
       - name: Check formatting
         run: ruff format --check .
+
+      - name: Apply migrations
+        run: alembic upgrade head
+
+      - name: Check models match migrations
+        run: alembic check
 
       - name: Run tests
         run: pytest -v
