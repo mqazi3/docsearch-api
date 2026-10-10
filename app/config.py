@@ -1,5 +1,7 @@
 from functools import lru_cache
+from typing import Literal
 
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,6 +21,12 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
     upload_dir: str = "data/uploads"
     max_upload_mb: int = 25
+    embedding_provider: Literal["openai", "fake"] = "openai"
+    embedding_model: str = "text-embedding-3-small"
+    embedding_batch_size: int = 64
+    openai_api_key: SecretStr | None = None
+    chunk_size_tokens: int = 500
+    chunk_overlap_tokens: int = 75
 
 
 @lru_cache

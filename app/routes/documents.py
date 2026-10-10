@@ -1,7 +1,9 @@
 import hashlib
+import logging
 import uuid
 from pathlib import Path
 
+import redis
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, UploadFile, status
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
@@ -9,9 +11,12 @@ from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.db import get_db
-from app.models import Document
-from app.schemas import DocumentList, DocumentOut
+from app.jobs import IngestionQueue, get_ingestion_queue
+from app.models import Chunk, Document, DocumentStatus
+from app.schemas import ChunkList, ChunkOut, DocumentList, DocumentOut
 from app.storage import LocalStorage, get_storage
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
@@ -60,6 +65,7 @@ def upload_document(
     response: Response,
     db: Session = Depends(get_db),
     storage: LocalStorage = Depends(get_storage),
+    ingestion: IngestionQueue = Depends(get_ingestion_queue),
 ) -> Document:
     if not file.filename:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Missing filename")
@@ -98,6 +104,11 @@ def upload_document(
         return db.scalar(select(Document).where(Document.sha256 == sha256))
 
     db.refresh(document)
+    try:
+        ingestion.enqueue_ingestion(document.id)
+    except redis.RedisError:
+        # The file and row are safe; the document stays "pending" until reprocessed.
+        logger.exception("Could not queue document %s for ingestion", document.id)
     return document
 
 
@@ -128,3 +139,64 @@ def get_document(document_id: uuid.UUID, db: Session = Depends(get_db)) -> Docum
     if document is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
     return document
+
+
+@router.post(
+    "/{document_id}/reprocess",
+    response_model=DocumentOut,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+def reprocess_document(
+    document_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    ingestion: IngestionQueue = Depends(get_ingestion_queue),
+) -> Document:
+    document = db.get(Document, document_id)
+    if document is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
+    if document.status == DocumentStatus.PROCESSING:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="Document is already processing"
+        )
+
+    document.status = DocumentStatus.PENDING
+    document.error = None
+    db.commit()
+    db.refresh(document)
+
+    try:
+        ingestion.enqueue_ingestion(document.id)
+    except redis.RedisError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Ingestion queue unavailable; try again shortly",
+        ) from exc
+    return document
+
+
+@router.get("/{document_id}/chunks", response_model=ChunkList)
+def list_chunks(
+    document_id: uuid.UUID,
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db),
+) -> ChunkList:
+    if db.get(Document, document_id) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
+
+    total = db.scalar(
+        select(func.count()).select_from(Chunk).where(Chunk.document_id == document_id)
+    )
+    chunks = db.scalars(
+        select(Chunk)
+        .where(Chunk.document_id == document_id)
+        .order_by(Chunk.chunk_index)
+        .limit(limit)
+        .offset(offset)
+    ).all()
+    return ChunkList(
+        items=[ChunkOut.model_validate(c) for c in chunks],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )

@@ -3,6 +3,10 @@ import uuid
 from pathlib import Path
 
 from app.config import get_settings
+from app.db import SessionLocal
+from app.embeddings import FakeEmbedder
+from app.ingestion.pipeline import ingest_document
+from app.storage import get_storage
 
 PDF_BYTES = b"%PDF-1.4\n% minimal fake PDF used only for upload tests\n"
 
@@ -94,3 +98,42 @@ def test_list_documents_paginates(client):
     assert len(second_page["items"]) == 1
     ids = {d["id"] for d in first_page["items"] + second_page["items"]}
     assert len(ids) == 3
+
+
+def test_new_upload_is_queued_for_ingestion(client, ingestion_queue):
+    body = upload(client, "policy.txt", b"queue me").json()
+    assert ingestion_queue.enqueued == [uuid.UUID(body["id"])]
+
+
+def test_duplicate_upload_is_not_queued_again(client, ingestion_queue):
+    upload(client, "a.txt", b"same bytes")
+    upload(client, "b.txt", b"same bytes")
+    assert len(ingestion_queue.enqueued) == 1
+
+
+def test_reprocess_requeues_document(client, ingestion_queue):
+    body = upload(client, "policy.txt", b"reprocess me").json()
+
+    response = client.post(f"/documents/{body['id']}/reprocess")
+
+    assert response.status_code == 202
+    assert response.json()["status"] == "pending"
+    assert len(ingestion_queue.enqueued) == 2
+
+
+def test_reprocess_unknown_document_returns_404(client):
+    assert client.post(f"/documents/{uuid.uuid4()}/reprocess").status_code == 404
+
+
+def test_list_chunks_after_ingestion(client):
+    body = upload(client, "policy.txt", b"Least privilege. " * 400, "text/plain").json()
+    ingest_document(uuid.UUID(body["id"]), SessionLocal, get_storage(), FakeEmbedder())
+
+    response = client.get(f"/documents/{body['id']}/chunks", params={"limit": 2})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == client.get(f"/documents/{body['id']}").json()["chunk_count"]
+    assert len(data["items"]) == 2
+    assert data["items"][0]["chunk_index"] == 0
+    assert "embedding" not in data["items"][0]

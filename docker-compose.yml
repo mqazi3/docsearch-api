@@ -50,6 +50,23 @@ services:
       redis:
         condition: service_healthy
 
+  worker:
+    build: .
+    command: ["rq", "worker", "ingestion", "--url", "redis://redis:6379/0"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://docsearch:docsearch@db:5432/docsearch
+      REDIS_URL: redis://redis:6379/0
+      UPLOAD_DIR: /data/uploads
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-openai}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy      
+
 volumes:
   pgdata:
   uploads:
