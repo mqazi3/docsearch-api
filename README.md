@@ -64,3 +64,29 @@ accuracy; final run: 35/36). Retrieval metrics are deterministic and reproduce e
 ### Latency
 Search (warm query cache): keyword ~4 ms, hybrid ~51 ms p50. Cold query embedding ~170 ms p50.
 Identifier-shaped queries skip the embedding call entirely.
+
+## Security
+
+### API keys
+- Every endpoint except `/health` requires an `X-API-Key` header.
+- Two roles: **admin** can upload and reprocess documents. **reader** can list documents, search, and ask.
+- A missing or invalid key returns `401`. A valid key with the wrong role returns `403`.
+- Keys are `dsk_` plus 32 random bytes, generated with `secrets.token_urlsafe`. Only the SHA-256 hash is stored, so the full key is shown once at creation and can't be recovered from the database.
+- I used SHA-256 instead of bcrypt on purpose. bcrypt's slowness protects low-entropy human passwords. These keys carry 256 bits of randomness, so brute-forcing a leaked hash isn't feasible, and a fast hash keeps per-request lookups cheap (a single indexed equality match).
+- Revoking a key takes effect on the next request.
+- `last_used_at` is written at most once per minute per key, so normal traffic doesn't cause a database write on every request.
+- Keys are managed with a CLI: `python -m app.cli create-key | list-keys | revoke-key`.
+
+### Rate limits
+Limits are fixed-window counters in Redis (`INCR` + `EXPIRE` in one transaction), applied per key. Responses over the limit get `429` with `Retry-After`.
+
+| Endpoint | Limit | If Redis is down |
+|---|---|---|
+| `GET /search` | 60/min per key | **Fails open.** Search costs one cached embedding at most, so availability matters more. |
+| `POST /ask` | 10/min per key, plus 500/day across all keys | **Fails closed (503).** Every call costs money, so an unprotected window isn't acceptable. |
+
+The global daily cap on `/ask` puts a hard ceiling on LLM spend even if many keys are active. The OpenAI account is prepaid with auto-reload off, which adds a second backstop.
+
+**Known trade-off:** a fixed window lets a client send up to 2× the limit across a window boundary. A sliding window or token bucket would fix that. At this traffic level, the simpler and cheaper implementation is the better call.
+
+**Not in scope:** key expiry and rotation, per-key custom quotas, OAuth/user accounts.

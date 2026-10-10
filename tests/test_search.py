@@ -39,6 +39,9 @@ class BrokenCache:
     def set(self, key, value, ex=None):
         raise redis.ConnectionError("simulated outage")
 
+    def pipeline(self, *args, **kwargs):
+        raise redis.ConnectionError("redis is down")
+
 
 @pytest.fixture
 def corpus():
