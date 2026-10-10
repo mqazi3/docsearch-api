@@ -7,3 +7,7 @@ pydantic-settings>=2.4
 alembic>=1.13
 pgvector>=0.3
 python-multipart>=0.0.9
+rq>=2.0
+pypdf>=5.0
+openai>=1.50
+tiktoken>=0.8

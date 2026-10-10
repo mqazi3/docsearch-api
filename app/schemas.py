@@ -25,3 +25,20 @@ class DocumentList(BaseModel):
     total: int
     limit: int
     offset: int
+
+
+class ChunkOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    chunk_index: int
+    content: str
+    page_number: int | None
+    token_count: int
+
+
+class ChunkList(BaseModel):
+    items: list[ChunkOut]
+    total: int
+    limit: int
+    offset: int

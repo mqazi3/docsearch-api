@@ -8,6 +8,7 @@ os.environ["DATABASE_URL"] = os.environ.get(
     "postgresql+psycopg://docsearch:docsearch@localhost:5434/docsearch_test",
 )
 os.environ["UPLOAD_DIR"] = tempfile.mkdtemp(prefix="docsearch-test-uploads-")
+os.environ["EMBEDDING_PROVIDER"] = "fake"
 
 import pytest  # noqa: E402
 from alembic.config import Config  # noqa: E402
@@ -17,6 +18,7 @@ from sqlalchemy.engine import make_url  # noqa: E402
 
 from alembic import command  # noqa: E402
 from app.db import engine  # noqa: E402
+from app.jobs import get_ingestion_queue  # noqa: E402
 from app.main import app  # noqa: E402
 
 
@@ -49,8 +51,24 @@ def clean_tables(database):
     yield
 
 
+class RecordingQueue:
+    """Stands in for RQ: records what would be queued instead of needing a worker."""
+
+    def __init__(self) -> None:
+        self.enqueued: list = []
+
+    def enqueue_ingestion(self, document_id) -> None:
+        self.enqueued.append(document_id)
+
+
 @pytest.fixture
-def client():
+def ingestion_queue():
+    return RecordingQueue()
+
+
+@pytest.fixture
+def client(ingestion_queue):
+    app.dependency_overrides[get_ingestion_queue] = lambda: ingestion_queue
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
