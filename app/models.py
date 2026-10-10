@@ -6,14 +6,17 @@ from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     BigInteger,
     CheckConstraint,
+    Computed,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
     UniqueConstraint,
     func,
 )
+from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
@@ -63,7 +66,19 @@ class Document(Base):
 
 class Chunk(Base):
     __tablename__ = "chunks"
-    __table_args__ = (UniqueConstraint("document_id", "chunk_index"),)
+    __table_args__ = (
+        UniqueConstraint("document_id", "chunk_index"),
+        # Full-text search: GIN index over the precomputed tsvector column.
+        Index("ix_chunks_content_tsv", "content_tsv", postgresql_using="gin"),
+        # Vector search: HNSW approximate-nearest-neighbor index for cosine distance.
+        Index(
+            "ix_chunks_embedding_hnsw",
+            "embedding",
+            postgresql_using="hnsw",
+            postgresql_with={"m": 16, "ef_construction": 64},
+            postgresql_ops={"embedding": "vector_cosine_ops"},
+        ),
+    )
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     document_id: Mapped[uuid.UUID] = mapped_column(
@@ -71,6 +86,9 @@ class Chunk(Base):
     )
     chunk_index: Mapped[int]
     content: Mapped[str] = mapped_column(Text)
+    content_tsv: Mapped[str] = mapped_column(
+        TSVECTOR, Computed("to_tsvector('english', content)", persisted=True)
+    )
     page_number: Mapped[int | None]
     token_count: Mapped[int]
     embedding: Mapped[list[float] | None] = mapped_column(Vector(EMBEDDING_DIM))

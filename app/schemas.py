@@ -42,3 +42,22 @@ class ChunkList(BaseModel):
     total: int
     limit: int
     offset: int
+
+
+class SearchResult(BaseModel):
+    chunk_id: int
+    document_id: uuid.UUID
+    filename: str
+    page_number: int | None
+    chunk_index: int
+    content: str
+    score: float
+    vector_rank: int | None
+    keyword_rank: int | None
+
+
+class SearchResponse(BaseModel):
+    query: str
+    mode: str
+    took_ms: float
+    results: list[SearchResult]
