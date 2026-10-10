@@ -4,11 +4,12 @@ import pytest
 import redis
 
 from app.cache import get_redis
+from app.config import get_settings
 from app.db import SessionLocal
 from app.embeddings import FakeEmbedder, get_embedder
 from app.ingestion.pipeline import ingest_document
 from app.main import app
-from app.search import reciprocal_rank_fusion
+from app.search import is_identifier_query, reciprocal_rank_fusion
 from app.storage import get_storage
 from tests.test_ingestion import make_document
 
@@ -145,3 +146,44 @@ def test_search_still_works_when_cache_is_down(client, corpus):
 def test_unknown_document_filter_returns_404(client, corpus):
     response = client.get("/search", params={"q": "system", "document_id": str(uuid.uuid4())})
     assert response.status_code == 404
+
+
+def test_hybrid_or_keyword_leg_matches_partial_terms(client, corpus, monkeypatch):
+    monkeypatch.setattr(get_settings(), "hybrid_keyword_any", True)
+
+    body = search(client, "how long should audit logs be kept")  # hybrid
+
+    audit = next(r for r in body["results"] if r["filename"] == "audit.txt")
+    assert audit["keyword_rank"] is not None
+
+
+def test_keyword_mode_still_requires_all_terms(client, corpus, monkeypatch):
+    monkeypatch.setattr(get_settings(), "hybrid_keyword_any", True)
+
+    body = search(client, "how long should audit logs be kept", mode="keyword")
+
+    assert body["results"] == []
+
+
+def test_identifier_query_classification():
+    assert is_identifier_query("03.05.03")
+    assert is_identifier_query("IA-05(01)")
+    assert is_identifier_query("  AC-2 ")
+    assert not is_identifier_query("audit logs")
+    assert not is_identifier_query("how long should audit logs be kept")
+    assert not is_identifier_query("encryption")
+
+
+def test_identifier_routing_skips_vector_leg(client, corpus, monkeypatch):
+    monkeypatch.setattr(get_settings(), "identifier_routing", True)
+    embedder = CountingEmbedder()
+    app.dependency_overrides[get_embedder] = lambda: embedder
+    mfa_text = b"Control 03.05.03 requires multi-factor authentication."
+    document_id = make_document(mfa_text, "mfa.txt")
+    ingest_document(document_id, SessionLocal, get_storage(), FakeEmbedder())
+
+    body = search(client, "03.05.03")  # hybrid
+
+    assert embedder.calls == 0
+    assert all(r["vector_rank"] is None for r in body["results"])
+    assert body["results"][0]["filename"] == "mfa.txt"

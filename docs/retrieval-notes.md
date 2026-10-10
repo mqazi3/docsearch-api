@@ -45,3 +45,23 @@ Observations
 ## 2026-10-10: Bug found during manual testing
 - Swagger's placeholder `document_ids` UUID filtered retrieval down to zero chunks, so /ask silently refused every question.
 - Fix: /ask and /search now return 404 for unknown document IDs instead of failing silently; the zero-source refusal path is now logged.
+
+## 2026-10-10: Experiment 1, OR-style keyword leg in hybrid (adopted)
+Hybrid all: hit@1 0.583 → 0.639, hit@5 0.972 → 0.972, MRR@10 0.716 → 0.747.
+Gains: keyword-type MRR 0.933 → 1.0; natural MRR 0.833 → 0.900 (nq-02 audit retention rank 3 → 1).
+Neutral/noisy: paraphrase MRR 0.728 → 0.720 (3 questions up, 3 down). Identifiers unchanged.
+Keyword-only and vector-only rows identical to baseline, so the change was isolated.
+Verdict: modest gain (~1 question of MRR); adopted as default with a config flag to disable.
+
+## 2026-10-10: Experiment 2, identifier-aware routing (adopted)
+Single-token queries containing a digit (e.g. 03.05.03, AC-2) skip the vector leg in hybrid mode.
+Hybrid identifier: hit@1 0.0 → 0.25, hit@5 0.875 → 1.0, MRR 0.312 → 0.583.
+Hybrid all: hit@5 0.972 → 1.0, MRR 0.747 → 0.807. All non-identifier types unchanged (classifier never misfired).
+Side benefit: identifier lookups skip the embedding API call entirely (not visible in harness latency,
+which pre-warms the query cache).
+
+Cumulative vs baseline (hybrid, all): hit@1 0.583 → 0.694, hit@5 0.972 → 1.0, MRR@10 0.716 → 0.807 (+12.7%).
+
+Remaining gaps
+- Identifier hit@1 only 0.25: appendix tables mentioning the ID still outrank the definition (ranks 2-3).
+- Paraphrase MRR: hybrid 0.720 < vector-only 0.795; fusion adds keyword noise on long paraphrased questions.

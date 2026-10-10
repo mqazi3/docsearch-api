@@ -1,0 +1,34 @@
+# Evaluation: identifier-routing
+
+- Run: 2026-10-10T05:14:19+00:00
+- Document: Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations.pdf
+- In-scope questions: 36
+
+## Retrieval (page-level relevance)
+
+| Mode | Type | n | hit@1 | hit@5 | hit@10 | MRR@10 |
+|---|---|---|---|---|---|---|
+| hybrid | all | 36 | 0.694 | 1.0 | 1.0 | 0.807 |
+| hybrid | identifier | 8 | 0.25 | 1.0 | 1.0 | 0.583 |
+| hybrid | keyword | 10 | 1.0 | 1.0 | 1.0 | 1.0 |
+| hybrid | natural | 8 | 0.875 | 1.0 | 1.0 | 0.9 |
+| hybrid | paraphrase | 10 | 0.6 | 1.0 | 1.0 | 0.72 |
+| vector | all | 36 | 0.556 | 0.778 | 0.806 | 0.639 |
+| vector | identifier | 8 | 0.0 | 0.0 | 0.125 | 0.016 |
+| vector | keyword | 10 | 0.7 | 1.0 | 1.0 | 0.833 |
+| vector | natural | 8 | 0.75 | 1.0 | 1.0 | 0.823 |
+| vector | paraphrase | 10 | 0.7 | 1.0 | 1.0 | 0.795 |
+| keyword | all | 36 | 0.389 | 0.639 | 0.667 | 0.504 |
+| keyword | identifier | 8 | 0.25 | 1.0 | 1.0 | 0.583 |
+| keyword | keyword | 10 | 0.7 | 1.0 | 1.0 | 0.833 |
+| keyword | natural | 8 | 0.5 | 0.5 | 0.625 | 0.518 |
+| keyword | paraphrase | 10 | 0.1 | 0.1 | 0.1 | 0.1 |
+
+## Latency (ms)
+
+| Step | p50 | p95 |
+|---|---|---|
+| query embedding (cold) | 179.1 | 438.0 |
+| search: keyword (warm cache) | 3.8 | 5.9 |
+| search: vector (warm cache) | 48.6 | 52.7 |
+| search: hybrid (warm cache) | 51.7 | 57.3 |
