@@ -2,6 +2,7 @@ import hashlib
 import logging
 import math
 import random
+from functools import lru_cache
 from typing import Protocol
 
 from openai import OpenAI
@@ -49,6 +50,7 @@ class FakeEmbedder:
         return [v / norm for v in values]
 
 
+@lru_cache
 def get_embedder() -> Embedder:
     settings = get_settings()
     if settings.embedding_provider == "fake":
