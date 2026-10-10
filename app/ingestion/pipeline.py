@@ -39,7 +39,12 @@ def ingest_document(
         try:
             settings = get_settings()
             pages = extract_pages(storage.read(document.storage_path), document.content_type)
-            chunks = chunk_pages(pages, settings.chunk_size_tokens, settings.chunk_overlap_tokens)
+            chunks = chunk_pages(
+                pages,
+                settings.chunk_size_tokens,
+                settings.chunk_overlap_tokens,
+                split_on_headings=settings.chunk_split_on_headings,
+            )
             if not chunks:
                 raise IngestionError("No extractable text found (the PDF may be scanned images)")
 

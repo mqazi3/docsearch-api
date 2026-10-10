@@ -1,0 +1,41 @@
+{"id": "id-01", "type": "identifier", "question": "03.05.03", "controls": ["03.05.03"]}
+{"id": "id-02", "type": "identifier", "question": "03.13.11", "controls": ["03.13.11"]}
+{"id": "id-03", "type": "identifier", "question": "03.01.08", "controls": ["03.01.08"]}
+{"id": "id-04", "type": "identifier", "question": "03.14.02", "controls": ["03.14.02"]}
+{"id": "id-05", "type": "identifier", "question": "03.03.03", "controls": ["03.03.03"]}
+{"id": "id-06", "type": "identifier", "question": "03.08.03", "controls": ["03.08.03"]}
+{"id": "id-07", "type": "identifier", "question": "03.06.01", "controls": ["03.06.01"]}
+{"id": "id-08", "type": "identifier", "question": "03.17.01", "controls": ["03.17.01"]}
+{"id": "kw-01", "type": "keyword", "question": "password management", "controls": ["03.05.07"]}
+{"id": "kw-02", "type": "keyword", "question": "unsuccessful logon attempts", "controls": ["03.01.08"]}
+{"id": "kw-03", "type": "keyword", "question": "media sanitization", "controls": ["03.08.03"]}
+{"id": "kw-04", "type": "keyword", "question": "system backup cryptographic protection", "controls": ["03.08.09"]}
+{"id": "kw-05", "type": "keyword", "question": "session termination", "controls": ["03.01.11"]}
+{"id": "kw-06", "type": "keyword", "question": "flaw remediation", "controls": ["03.14.01"]}
+{"id": "kw-07", "type": "keyword", "question": "audit record content", "controls": ["03.03.02"]}
+{"id": "kw-08", "type": "keyword", "question": "vulnerability monitoring and scanning", "controls": ["03.11.02"]}
+{"id": "kw-09", "type": "keyword", "question": "incident response plan", "controls": ["03.06.05"]}
+{"id": "kw-10", "type": "keyword", "question": "personnel screening", "controls": ["03.09.01"]}
+{"id": "pp-01", "type": "paraphrase", "question": "How do we stop people from guessing passwords over and over?", "controls": ["03.01.08"]}
+{"id": "pp-02", "type": "paraphrase", "question": "What should happen to old hard drives before we throw them away?", "controls": ["03.08.03"]}
+{"id": "pp-03", "type": "paraphrase", "question": "Do screens need to lock when someone walks away from their computer?", "controls": ["03.01.10"]}
+{"id": "pp-04", "type": "paraphrase", "question": "What do we do when an employee quits or gets fired?", "controls": ["03.09.02"]}
+{"id": "pp-05", "type": "paraphrase", "question": "How should we protect our computers from viruses?", "controls": ["03.14.02"]}
+{"id": "pp-06", "type": "paraphrase", "question": "Should laptops taken on trips to risky countries be set up differently?", "controls": ["03.04.12"]}
+{"id": "pp-07", "type": "paraphrase", "question": "How should encryption keys be handled?", "controls": ["03.13.10"]}
+{"id": "pp-08", "type": "paraphrase", "question": "Can staff work from home securely?", "controls": ["03.10.06"]}
+{"id": "pp-09", "type": "paraphrase", "question": "What should we do about software the vendor no longer supports?", "controls": ["03.16.02"]}
+{"id": "pp-10", "type": "paraphrase", "question": "How do we make sure system clocks are accurate for logs?", "controls": ["03.03.07"]}
+{"id": "nq-01", "type": "natural", "question": "How should passwords be protected?", "controls": ["03.05.07", "03.05.12"]}
+{"id": "nq-02", "type": "natural", "question": "How long should audit logs be kept?", "controls": ["03.03.03"]}
+{"id": "nq-03", "type": "natural", "question": "What is required for multi-factor authentication?", "controls": ["03.05.03"]}
+{"id": "nq-04", "type": "natural", "question": "What must a system security plan contain?", "controls": ["03.15.02"]}
+{"id": "nq-05", "type": "natural", "question": "How often should security training be provided?", "controls": ["03.02.01", "03.02.02"]}
+{"id": "nq-06", "type": "natural", "question": "What events should the system log?", "controls": ["03.03.01"]}
+{"id": "nq-07", "type": "natural", "question": "How should CUI be protected when it is transmitted?", "controls": ["03.13.08"]}
+{"id": "nq-08", "type": "natural", "question": "What does the principle of least privilege require?", "controls": ["03.01.05"]}
+{"id": "oos-01", "type": "out_of_scope", "question": "What is the capital of France?", "controls": []}
+{"id": "oos-02", "type": "out_of_scope", "question": "How much can a company be fined under GDPR?", "controls": []}
+{"id": "oos-03", "type": "out_of_scope", "question": "How do I reset my Windows password?", "controls": []}
+{"id": "oos-04", "type": "out_of_scope", "question": "Who won the 2022 FIFA World Cup?", "controls": []}
+{"id": "oos-05", "type": "out_of_scope", "question": "What is the best programming language for beginners?", "controls": []}

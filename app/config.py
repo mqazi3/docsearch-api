@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     answer_model: str = "gpt-6-luna"
     answer_max_output_tokens: int = 1000
     ask_max_context_tokens: int = 6000
+    hybrid_keyword_any: bool = True
+    identifier_routing: bool = True
+    chunk_split_on_headings: bool = False
 
 
 @lru_cache

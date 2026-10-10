@@ -1,12 +1,14 @@
 import hashlib
 import json
 import logging
+import re
 import uuid
 from dataclasses import dataclass
 from enum import StrEnum
 
 import redis
-from sqlalchemy import func, select
+from sqlalchemy import Text, cast, func, select
+from sqlalchemy.dialects.postgresql import TSQUERY
 from sqlalchemy.orm import Session, defer
 
 from app.config import get_settings
@@ -32,6 +34,14 @@ class SearchHit:
     score: float = 0.0
     vector_rank: int | None = None
     keyword_rank: int | None = None
+
+
+# One whitespace-free token containing a digit: 03.05.03, AC-2, IA-05(01).
+IDENTIFIER_QUERY = re.compile(r"\S*\d\S*")
+
+
+def is_identifier_query(query: str) -> bool:
+    return IDENTIFIER_QUERY.fullmatch(query.strip()) is not None
 
 
 def reciprocal_rank_fusion(
@@ -61,12 +71,24 @@ def vector_search(
     return list(db.scalars(stmt))
 
 
-def keyword_search(
-    db: Session, query: str, limit: int, document_ids: list[uuid.UUID] | None
-) -> list[int]:
-    # websearch_to_tsquery accepts user-style input ("quoted phrases", -exclusions)
-    # and never raises a syntax error on arbitrary text.
+def _tsquery(query: str, match_any: bool):
     tsquery = func.websearch_to_tsquery("english", query)
+    if match_any:
+        # websearch_to_tsquery ANDs every term: 'audit' & 'log' & 'kept'.
+        # Rewrite to OR ('audit' | 'log' | 'kept') so partial matches still count;
+        # ts_rank_cd then ranks chunks that match more terms higher.
+        tsquery = cast(func.replace(cast(tsquery, Text), " & ", " | "), TSQUERY)
+    return tsquery
+
+
+def keyword_search(
+    db: Session,
+    query: str,
+    limit: int,
+    document_ids: list[uuid.UUID] | None,
+    match_any: bool = False,
+) -> list[int]:
+    tsquery = _tsquery(query, match_any)
     rank = func.ts_rank_cd(Chunk.content_tsv, tsquery)
     stmt = (
         select(Chunk.id)
@@ -111,11 +133,21 @@ def run_search(
     vector_ids: list[int] = []
     keyword_ids: list[int] = []
 
-    if mode in (SearchMode.HYBRID, SearchMode.VECTOR):
+    # Embeddings don't distinguish identifiers like 03.05.03 from 03.05.07, so for
+    # identifier-shaped queries the vector leg only adds noise (and an API call).
+    route_to_keyword = (
+        mode == SearchMode.HYBRID
+        and get_settings().identifier_routing
+        and is_identifier_query(query)
+    )
+    if mode == SearchMode.VECTOR or (mode == SearchMode.HYBRID and not route_to_keyword):
         query_vector = embed_query(query, embedder, cache, cache_namespace)
         vector_ids = vector_search(db, query_vector, CANDIDATES_PER_METHOD, document_ids)
     if mode in (SearchMode.HYBRID, SearchMode.KEYWORD):
-        keyword_ids = keyword_search(db, query, CANDIDATES_PER_METHOD, document_ids)
+        match_any = mode == SearchMode.HYBRID and get_settings().hybrid_keyword_any
+        keyword_ids = keyword_search(
+            db, query, CANDIDATES_PER_METHOD, document_ids, match_any=match_any
+        )
 
     # With a single mode, RRF over one list simply preserves its order: one code path.
     hits = reciprocal_rank_fusion(vector_ids, keyword_ids)[:limit]
