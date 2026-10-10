@@ -10,6 +10,7 @@ os.environ["DATABASE_URL"] = os.environ.get(
 os.environ["UPLOAD_DIR"] = tempfile.mkdtemp(prefix="docsearch-test-uploads-")
 os.environ["EMBEDDING_PROVIDER"] = "fake"
 os.environ["ANSWER_PROVIDER"] = "fake"
+os.environ["ENVIRONMENT"] = "test"
 
 import pytest  # noqa: E402
 from alembic.config import Config  # noqa: E402
@@ -18,7 +19,9 @@ from sqlalchemy import create_engine, text  # noqa: E402
 from sqlalchemy.engine import make_url  # noqa: E402
 
 from alembic import command  # noqa: E402
-from app.db import engine  # noqa: E402
+from app.auth import create_api_key  # noqa: E402
+from app.cache import redis_client  # noqa: E402
+from app.db import SessionLocal, engine  # noqa: E402
 from app.jobs import get_ingestion_queue  # noqa: E402
 from app.main import app  # noqa: E402
 
@@ -46,9 +49,11 @@ def database():
 
 @pytest.fixture(autouse=True)
 def clean_tables(database):
-    """Every test starts with empty tables."""
+    """Every test starts with empty tables and fresh rate-limit counters."""
     with engine.begin() as conn:
-        conn.execute(text("TRUNCATE chunks, documents RESTART IDENTITY CASCADE"))
+        conn.execute(text("TRUNCATE api_keys, chunks, documents RESTART IDENTITY CASCADE"))
+    for key in redis_client.scan_iter("test:ratelimit:*"):
+        redis_client.delete(key)
     yield
 
 
@@ -68,8 +73,23 @@ def ingestion_queue():
 
 
 @pytest.fixture
-def client(ingestion_queue):
+def admin_key():
+    with SessionLocal() as db:
+        _, raw_key = create_api_key(db, "test-admin", "admin")
+    return raw_key
+
+
+@pytest.fixture
+def client(ingestion_queue, admin_key):
+    """Authenticated as admin, so existing tests exercise behavior, not auth."""
     app.dependency_overrides[get_ingestion_queue] = lambda: ingestion_queue
+    with TestClient(app, headers={"X-API-Key": admin_key}) as test_client:
+        yield test_client
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def anon_client():
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()

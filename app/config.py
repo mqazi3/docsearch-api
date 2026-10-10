@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     hybrid_keyword_any: bool = True
     identifier_routing: bool = True
     chunk_split_on_headings: bool = False
+    rate_limit_search_per_minute: int = 60
+    rate_limit_ask_per_minute: int = 10
+    ask_daily_budget: int = 500
 
 
 @lru_cache

@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from app.cache import get_redis
 from app.db import get_db
 from app.embeddings import Embedder, get_embedder
+from app.ratelimit import search_rate_limit
 from app.schemas import SearchResponse, SearchResult
 from app.search import SearchMode, embedding_namespace, missing_document_ids, run_search
 
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=["Search"])
 
 
-@router.get("/search", response_model=SearchResponse)
+@router.get("/search", response_model=SearchResponse, dependencies=[Depends(search_rate_limit)])
 def search(
     q: str = Query(..., min_length=1, max_length=500, description="Search query"),
     mode: SearchMode = SearchMode.HYBRID,

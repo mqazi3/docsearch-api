@@ -9,6 +9,7 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.auth import require_admin, require_reader
 from app.config import get_settings
 from app.db import get_db
 from app.jobs import IngestionQueue, get_ingestion_queue
@@ -59,6 +60,7 @@ def _detect_content_type(filename: str, data: bytes) -> str:
     response_model=DocumentOut,
     status_code=status.HTTP_202_ACCEPTED,
     responses={200: {"description": "Duplicate upload: returns the existing document"}},
+    dependencies=[Depends(require_admin)],
 )
 def upload_document(
     file: UploadFile,
@@ -112,7 +114,7 @@ def upload_document(
     return document
 
 
-@router.get("", response_model=DocumentList)
+@router.get("", response_model=DocumentList, dependencies=[Depends(require_reader)])
 def list_documents(
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
@@ -133,7 +135,7 @@ def list_documents(
     )
 
 
-@router.get("/{document_id}", response_model=DocumentOut)
+@router.get("/{document_id}", response_model=DocumentOut, dependencies=[Depends(require_reader)])
 def get_document(document_id: uuid.UUID, db: Session = Depends(get_db)) -> Document:
     document = db.get(Document, document_id)
     if document is None:
@@ -145,6 +147,7 @@ def get_document(document_id: uuid.UUID, db: Session = Depends(get_db)) -> Docum
     "/{document_id}/reprocess",
     response_model=DocumentOut,
     status_code=status.HTTP_202_ACCEPTED,
+    dependencies=[Depends(require_admin)],
 )
 def reprocess_document(
     document_id: uuid.UUID,
@@ -174,7 +177,9 @@ def reprocess_document(
     return document
 
 
-@router.get("/{document_id}/chunks", response_model=ChunkList)
+@router.get(
+    "/{document_id}/chunks", response_model=ChunkList, dependencies=[Depends(require_reader)]
+)
 def list_chunks(
     document_id: uuid.UUID,
     limit: int = Query(20, ge=1, le=100),

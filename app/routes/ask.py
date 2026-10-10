@@ -9,6 +9,7 @@ from app.cache import get_redis
 from app.db import get_db
 from app.embeddings import Embedder, get_embedder
 from app.qa import answer_question
+from app.ratelimit import ask_rate_limit
 from app.schemas import AskRequest, AskResponse, Citation, TokenUsage
 from app.search import missing_document_ids
 
@@ -18,7 +19,7 @@ router = APIRouter(tags=["Answers"])
 EXCERPT_CHARS = 300
 
 
-@router.post("/ask", response_model=AskResponse)
+@router.post("/ask", response_model=AskResponse, dependencies=[Depends(ask_rate_limit)])
 def ask(
     body: AskRequest,
     db: Session = Depends(get_db),
