@@ -1,0 +1,1274 @@
+{
+  "label": "final",
+  "run_at": "2026-10-10T06:11:53+00:00",
+  "document": "Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations.pdf",
+  "retrieval": {
+    "n_questions": 36,
+    "metrics": {
+      "hybrid": {
+        "all": {
+          "n": 36,
+          "hit@1": 0.694,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.807
+        },
+        "identifier": {
+          "n": 8,
+          "hit@1": 0.25,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.583
+        },
+        "keyword": {
+          "n": 10,
+          "hit@1": 1.0,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 1.0
+        },
+        "natural": {
+          "n": 8,
+          "hit@1": 0.875,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.9
+        },
+        "paraphrase": {
+          "n": 10,
+          "hit@1": 0.6,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.72
+        }
+      },
+      "vector": {
+        "all": {
+          "n": 36,
+          "hit@1": 0.556,
+          "hit@5": 0.778,
+          "hit@10": 0.806,
+          "mrr@10": 0.639
+        },
+        "identifier": {
+          "n": 8,
+          "hit@1": 0.0,
+          "hit@5": 0.0,
+          "hit@10": 0.125,
+          "mrr@10": 0.016
+        },
+        "keyword": {
+          "n": 10,
+          "hit@1": 0.7,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.833
+        },
+        "natural": {
+          "n": 8,
+          "hit@1": 0.75,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.823
+        },
+        "paraphrase": {
+          "n": 10,
+          "hit@1": 0.7,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.795
+        }
+      },
+      "keyword": {
+        "all": {
+          "n": 36,
+          "hit@1": 0.389,
+          "hit@5": 0.639,
+          "hit@10": 0.667,
+          "mrr@10": 0.504
+        },
+        "identifier": {
+          "n": 8,
+          "hit@1": 0.25,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.583
+        },
+        "keyword": {
+          "n": 10,
+          "hit@1": 0.7,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.833
+        },
+        "natural": {
+          "n": 8,
+          "hit@1": 0.5,
+          "hit@5": 0.5,
+          "hit@10": 0.625,
+          "mrr@10": 0.518
+        },
+        "paraphrase": {
+          "n": 10,
+          "hit@1": 0.1,
+          "hit@5": 0.1,
+          "hit@10": 0.1,
+          "mrr@10": 0.1
+        }
+      }
+    },
+    "latency_ms": {
+      "embedding": {
+        "p50": 173.8,
+        "p95": 671.4
+      },
+      "hybrid": {
+        "p50": 51.4,
+        "p95": 62.6
+      },
+      "vector": {
+        "p50": 48.8,
+        "p95": 55.4
+      },
+      "keyword": {
+        "p50": 3.8,
+        "p95": 7.7
+      }
+    },
+    "per_question": [
+      {
+        "id": "id-01",
+        "type": "identifier",
+        "question": "03.05.03",
+        "relevant_pages": [
+          44,
+          45
+        ],
+        "ranks": {
+          "hybrid": 3,
+          "vector": null,
+          "keyword": 3
+        }
+      },
+      {
+        "id": "id-02",
+        "type": "identifier",
+        "question": "03.13.11",
+        "relevant_pages": [
+          71,
+          72
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 8,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "id-03",
+        "type": "identifier",
+        "question": "03.01.08",
+        "relevant_pages": [
+          22,
+          23
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": null,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "id-04",
+        "type": "identifier",
+        "question": "03.14.02",
+        "relevant_pages": [
+          74,
+          75
+        ],
+        "ranks": {
+          "hybrid": 3,
+          "vector": null,
+          "keyword": 3
+        }
+      },
+      {
+        "id": "id-05",
+        "type": "identifier",
+        "question": "03.03.03",
+        "relevant_pages": [
+          33
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": null,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "id-06",
+        "type": "identifier",
+        "question": "03.08.03",
+        "relevant_pages": [
+          55,
+          56
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": null,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "id-07",
+        "type": "identifier",
+        "question": "03.06.01",
+        "relevant_pages": [
+          49
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": null,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "id-08",
+        "type": "identifier",
+        "question": "03.17.01",
+        "relevant_pages": [
+          82,
+          83
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": null,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "kw-01",
+        "type": "keyword",
+        "question": "password management",
+        "relevant_pages": [
+          46,
+          47
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-02",
+        "type": "keyword",
+        "question": "unsuccessful logon attempts",
+        "relevant_pages": [
+          22,
+          23
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-03",
+        "type": "keyword",
+        "question": "media sanitization",
+        "relevant_pages": [
+          55,
+          56
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-04",
+        "type": "keyword",
+        "question": "system backup cryptographic protection",
+        "relevant_pages": [
+          58
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "kw-05",
+        "type": "keyword",
+        "question": "session termination",
+        "relevant_pages": [
+          24
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 3,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-06",
+        "type": "keyword",
+        "question": "flaw remediation",
+        "relevant_pages": [
+          73,
+          74
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 2,
+          "keyword": 3
+        }
+      },
+      {
+        "id": "kw-07",
+        "type": "keyword",
+        "question": "audit record content",
+        "relevant_pages": [
+          32,
+          33
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-08",
+        "type": "keyword",
+        "question": "vulnerability monitoring and scanning",
+        "relevant_pages": [
+          64,
+          65
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "kw-09",
+        "type": "keyword",
+        "question": "incident response plan",
+        "relevant_pages": [
+          51,
+          52
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-10",
+        "type": "keyword",
+        "question": "personnel screening",
+        "relevant_pages": [
+          58,
+          59
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 2,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "pp-01",
+        "type": "paraphrase",
+        "question": "How do we stop people from guessing passwords over and over?",
+        "relevant_pages": [
+          22,
+          23
+        ],
+        "ranks": {
+          "hybrid": 3,
+          "vector": 2,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-02",
+        "type": "paraphrase",
+        "question": "What should happen to old hard drives before we throw them away?",
+        "relevant_pages": [
+          55,
+          56
+        ],
+        "ranks": {
+          "hybrid": 3,
+          "vector": 4,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-03",
+        "type": "paraphrase",
+        "question": "Do screens need to lock when someone walks away from their computer?",
+        "relevant_pages": [
+          23,
+          24
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-04",
+        "type": "paraphrase",
+        "question": "What do we do when an employee quits or gets fired?",
+        "relevant_pages": [
+          59,
+          60
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-05",
+        "type": "paraphrase",
+        "question": "How should we protect our computers from viruses?",
+        "relevant_pages": [
+          74,
+          75
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-06",
+        "type": "paraphrase",
+        "question": "Should laptops taken on trips to risky countries be set up differently?",
+        "relevant_pages": [
+          42,
+          43
+        ],
+        "ranks": {
+          "hybrid": 3,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-07",
+        "type": "paraphrase",
+        "question": "How should encryption keys be handled?",
+        "relevant_pages": [
+          71
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-08",
+        "type": "paraphrase",
+        "question": "Can staff work from home securely?",
+        "relevant_pages": [
+          61,
+          62
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 5,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-09",
+        "type": "paraphrase",
+        "question": "What should we do about software the vendor no longer supports?",
+        "relevant_pages": [
+          80,
+          81
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "pp-10",
+        "type": "paraphrase",
+        "question": "How do we make sure system clocks are accurate for logs?",
+        "relevant_pages": [
+          35,
+          36
+        ],
+        "ranks": {
+          "hybrid": 5,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "nq-01",
+        "type": "natural",
+        "question": "How should passwords be protected?",
+        "relevant_pages": [
+          46,
+          47,
+          48,
+          49
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "nq-02",
+        "type": "natural",
+        "question": "How long should audit logs be kept?",
+        "relevant_pages": [
+          33
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 3,
+          "keyword": null
+        }
+      },
+      {
+        "id": "nq-03",
+        "type": "natural",
+        "question": "What is required for multi-factor authentication?",
+        "relevant_pages": [
+          44,
+          45
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "nq-04",
+        "type": "natural",
+        "question": "What must a system security plan contain?",
+        "relevant_pages": [
+          78,
+          79
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "nq-05",
+        "type": "natural",
+        "question": "How often should security training be provided?",
+        "relevant_pages": [
+          29,
+          30,
+          31
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "nq-06",
+        "type": "natural",
+        "question": "What events should the system log?",
+        "relevant_pages": [
+          31,
+          32
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "nq-07",
+        "type": "natural",
+        "question": "How should CUI be protected when it is transmitted?",
+        "relevant_pages": [
+          70
+        ],
+        "ranks": {
+          "hybrid": 5,
+          "vector": 4,
+          "keyword": 7
+        }
+      },
+      {
+        "id": "nq-08",
+        "type": "natural",
+        "question": "What does the principle of least privilege require?",
+        "relevant_pages": [
+          20,
+          21
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      }
+    ]
+  },
+  "answers": {
+    "metrics": {
+      "errors": 0,
+      "in_scope_n": 36,
+      "answered_rate": 1.0,
+      "citation_hit_rate": 0.972,
+      "unsupported_citations": 0,
+      "out_of_scope_n": 5,
+      "correct_refusal_rate": 0.8,
+      "generation_ms_p50": 2112.9,
+      "generation_ms_p95": 3063.9,
+      "avg_input_tokens": 3285,
+      "avg_output_tokens": 111
+    },
+    "per_question": [
+      {
+        "id": "id-01",
+        "type": "identifier",
+        "question": "03.05.03",
+        "answer": "03.05.03 requires implementing multi-factor authentication for access to privileged and non-privileged accounts. It uses two or more different authentication factors, such as something you know, have, or are. [3]",
+        "refused": false,
+        "cited_pages": [
+          44
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 1401,
+        "output_tokens": 97,
+        "generation_ms": 2482.87
+      },
+      {
+        "id": "id-02",
+        "type": "identifier",
+        "question": "03.13.11",
+        "answer": "03.13.11, Cryptographic Protection: Implement organization-defined types of cryptography to protect the confidentiality of CUI; FIPS-validated cryptography is recommended. [1][3]",
+        "refused": false,
+        "cited_pages": [
+          71,
+          15
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3318,
+        "output_tokens": 107,
+        "generation_ms": 1713.02
+      },
+      {
+        "id": "id-03",
+        "type": "identifier",
+        "question": "03.01.08",
+        "answer": "**03.01.08 \u2014 Unsuccessful Logon Attempts:** Enforce an organization-defined limit on consecutive invalid logon attempts within an organization-defined time period. When that limit is exceeded, take one or more defined actions, such as locking the account or node, delaying the next logon prompt, or notifying a system administrator. [2]",
+        "refused": false,
+        "cited_pages": [
+          22
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 1673,
+        "output_tokens": 111,
+        "generation_ms": 1922.57
+      },
+      {
+        "id": "id-04",
+        "type": "identifier",
+        "question": "03.14.02",
+        "answer": "**03.14.02 \u2014 Malicious Code Protection:** Implement protection at system entry and exit points to detect and eradicate malicious code, and update protections as new releases become available under configuration management policies and procedures. [3] Configure protections to scan the system at an organization-defined frequency, scan external files in real time as they are downloaded, opened, or executed, and block, quarantine, or otherwise mitigate detected malicious code. [3]",
+        "refused": false,
+        "cited_pages": [
+          74
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 2239,
+        "output_tokens": 133,
+        "generation_ms": 2016.28
+      },
+      {
+        "id": "id-05",
+        "type": "identifier",
+        "question": "03.03.03",
+        "answer": "**03.03.03 \u2014 Audit Record Generation:** Generate audit records for the selected event types and content specified in 03.03.01 and 03.03.02, and retain them for a period consistent with the records retention policy. [2]",
+        "refused": false,
+        "cited_pages": [
+          33
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 1606,
+        "output_tokens": 118,
+        "generation_ms": 2112.9
+      },
+      {
+        "id": "id-06",
+        "type": "identifier",
+        "question": "03.08.03",
+        "answer": "03.08.03 requires sanitizing system media containing CUI before disposal, release outside organizational control, or reuse; sanitization removes the CUI so it cannot be retrieved or reconstructed. [2]",
+        "refused": false,
+        "cited_pages": [
+          55
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 1520,
+        "output_tokens": 123,
+        "generation_ms": 2119.77
+      },
+      {
+        "id": "id-07",
+        "type": "identifier",
+        "question": "03.06.01",
+        "answer": "03.06.01 requires an incident-handling capability consistent with the incident response plan, covering preparation, detection and analysis, containment, eradication, and recovery. [1]",
+        "refused": false,
+        "cited_pages": [
+          49
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 1107,
+        "output_tokens": 73,
+        "generation_ms": 1301.3
+      },
+      {
+        "id": "id-08",
+        "type": "identifier",
+        "question": "03.17.01",
+        "answer": "03.17.01 requires developing a plan to manage supply chain risks across the system lifecycle, reviewing and updating it at an organization-defined frequency, and protecting it from unauthorized disclosure. [2]",
+        "refused": false,
+        "cited_pages": [
+          82
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 1460,
+        "output_tokens": 78,
+        "generation_ms": 1571.36
+      },
+      {
+        "id": "kw-01",
+        "type": "keyword",
+        "question": "password management",
+        "answer": "NIST SP 800-171r3 says to:\n- Maintain and update a list of commonly used, expected, or compromised passwords, and check new or updated passwords against it. [1]\n- Transmit passwords only over cryptographically protected channels and store them in cryptographically protected form. [1]\n- Require a new password at first use after account recovery, and apply organization-defined composition and complexity rules. [1]\n- Prefer long passwords or passphrases; organizations may set rules such as a minimum length. [1]",
+        "refused": false,
+        "cited_pages": [
+          46
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3635,
+        "output_tokens": 228,
+        "generation_ms": 3197.8
+      },
+      {
+        "id": "kw-02",
+        "type": "keyword",
+        "question": "unsuccessful logon attempts",
+        "answer": "Limit consecutive invalid logon attempts per user within an organization-defined time period. When the limit is exceeded, automatically take an organization-selected action, such as locking the account or node, delaying the next logon prompt, or notifying a system administrator. [1]",
+        "refused": false,
+        "cited_pages": [
+          22
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3956,
+        "output_tokens": 125,
+        "generation_ms": 2444.44
+      },
+      {
+        "id": "kw-03",
+        "type": "keyword",
+        "question": "media sanitization",
+        "answer": "Sanitize system media containing CUI before disposal, release outside organizational control, or reuse. The process must remove CUI so it cannot be retrieved or reconstructed; techniques include cryptographic erasure, clearing, purging, and destruction. [1]",
+        "refused": false,
+        "cited_pages": [
+          55
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3864,
+        "output_tokens": 125,
+        "generation_ms": 2211.97
+      },
+      {
+        "id": "kw-04",
+        "type": "keyword",
+        "question": "system backup cryptographic protection",
+        "answer": "Protect the confidentiality of backup information by implementing cryptographic mechanisms to prevent unauthorized disclosure of CUI at backup storage locations. [1]",
+        "refused": false,
+        "cited_pages": [
+          58
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3861,
+        "output_tokens": 80,
+        "generation_ms": 1886.14
+      },
+      {
+        "id": "kw-05",
+        "type": "keyword",
+        "question": "session termination",
+        "answer": "Session termination automatically ends a user\u2019s logical session under organization-defined conditions, such as inactivity, time-of-day restrictions, or certain incident responses; it ends associated processes except those created to continue after the session ends. [1] This is distinct from terminating the network connection associated with a communications session. [1][4]",
+        "refused": false,
+        "cited_pages": [
+          24,
+          70
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3419,
+        "output_tokens": 150,
+        "generation_ms": 2523.87
+      },
+      {
+        "id": "kw-06",
+        "type": "keyword",
+        "question": "flaw remediation",
+        "answer": "Flaw remediation requires identifying, reporting, and correcting system flaws, and installing security-relevant software and firmware updates within an organization-defined time period after their release. [5]",
+        "refused": false,
+        "cited_pages": [
+          73
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3263,
+        "output_tokens": 95,
+        "generation_ms": 1753.72
+      },
+      {
+        "id": "kw-07",
+        "type": "keyword",
+        "question": "audit record content",
+        "answer": "Audit records must include the event type, when and where it occurred, its source and outcome, and the identities of the individuals, subjects, objects, or entities associated with it; add other information as needed. [4] Examples of additional content include timestamps, source and destination addresses, user or process identifiers, event descriptions, file names, invoked access or flow control rules, and event-specific results. [4]",
+        "refused": false,
+        "cited_pages": [
+          32
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3814,
+        "output_tokens": 114,
+        "generation_ms": 2265.07
+      },
+      {
+        "id": "kw-08",
+        "type": "keyword",
+        "question": "vulnerability monitoring and scanning",
+        "answer": "Vulnerability monitoring and scanning requires organizations to scan systems at an organization-defined frequency and when new vulnerabilities affecting them are identified, remediate vulnerabilities within defined response times, and update the vulnerabilities being scanned at a defined frequency and when new vulnerabilities are identified and reported. [1] Scans can check patch levels, exposed functions, ports, protocols and services, and misconfigured flow-control mechanisms. [1]",
+        "refused": false,
+        "cited_pages": [
+          64
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 2899,
+        "output_tokens": 159,
+        "generation_ms": 2610.41
+      },
+      {
+        "id": "kw-09",
+        "type": "keyword",
+        "question": "incident response plan",
+        "answer": "An incident response plan must provide a roadmap for implementing the response capability, describe its structure and how it fits into the organization, define reportable incidents, address information sharing, and assign responsibilities. Copies must be distributed to designated response personnel and organizational elements; the plan must be updated for organizational or system changes and implementation, execution, or testing problems, and protected from unauthorized disclosure. [1]",
+        "refused": false,
+        "cited_pages": [
+          51
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3207,
+        "output_tokens": 130,
+        "generation_ms": 2433.16
+      },
+      {
+        "id": "kw-10",
+        "type": "keyword",
+        "question": "personnel screening",
+        "answer": "Personnel must be screened before being authorized to access the system and rescreened under organization-defined conditions. Screening assesses an individual\u2019s trustworthiness, including conduct, integrity, judgment, loyalty, reliability, and stability. [1]",
+        "refused": false,
+        "cited_pages": [
+          58
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3813,
+        "output_tokens": 49,
+        "generation_ms": 1439.1
+      },
+      {
+        "id": "pp-01",
+        "type": "paraphrase",
+        "question": "How do we stop people from guessing passwords over and over?",
+        "answer": "Set a limit on consecutive invalid logon attempts within an organization-defined time period, then automatically lock the account or node, delay the next prompt, notify an administrator, or take another defined action when the limit is exceeded. [3]",
+        "refused": false,
+        "cited_pages": [
+          22
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3488,
+        "output_tokens": 94,
+        "generation_ms": 2399.37
+      },
+      {
+        "id": "pp-02",
+        "type": "paraphrase",
+        "question": "What should happen to old hard drives before we throw them away?",
+        "answer": "Before disposal, sanitize the hard drives\u2014such as by destroying them, cryptographically erasing, clearing, or purging them\u2014so the CUI cannot be retrieved or reconstructed. [4]",
+        "refused": false,
+        "cited_pages": [
+          54
+        ],
+        "citation_hit": false,
+        "unsupported_citations": [],
+        "input_tokens": 3400,
+        "output_tokens": 100,
+        "generation_ms": 1664.09
+      },
+      {
+        "id": "pp-03",
+        "type": "paraphrase",
+        "question": "Do screens need to lock when someone walks away from their computer?",
+        "answer": "Yes. The organization must prevent access when a user leaves a system unattended, either by requiring a lock before they leave or by locking after an organization-defined period of inactivity; the lock must remain until the user reauthenticates. [1]",
+        "refused": false,
+        "cited_pages": [
+          23
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3823,
+        "output_tokens": 98,
+        "generation_ms": 1983.56
+      },
+      {
+        "id": "pp-04",
+        "type": "paraphrase",
+        "question": "What do we do when an employee quits or gets fired?",
+        "answer": "When an employee leaves, disable their system access within your organization\u2019s defined timeframe, revoke their authenticators and credentials, and retrieve security-related property such as tokens, keys, ID cards, and building passes. [1] An exit interview can also reinforce their continuing security obligations and help account for organizational property, when an interview is possible. [1]",
+        "refused": false,
+        "cited_pages": [
+          59
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3056,
+        "output_tokens": 135,
+        "generation_ms": 2494.03
+      },
+      {
+        "id": "pp-05",
+        "type": "paraphrase",
+        "question": "How should we protect our computers from viruses?",
+        "answer": "Use malicious-code protection at system entry and exit points, and keep it updated as new releases become available. Configure it to scan systems regularly and scan files from external sources in real time as they are downloaded, opened, or executed; on detection, block or quarantine the code or take another mitigation action. [1]",
+        "refused": false,
+        "cited_pages": [
+          74
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3551,
+        "output_tokens": 126,
+        "generation_ms": 1983.69
+      },
+      {
+        "id": "pp-06",
+        "type": "paraphrase",
+        "question": "Should laptops taken on trips to risky countries be set up differently?",
+        "answer": "Yes\u2014when a laptop will be taken to a known high-risk area, it may need added protections before travel, such as a sanitized hard drive, limited applications, and stricter configuration settings. [3] After the trip, examine it for signs of tampering and consider purging and reimaging its storage. [3] The source does not specify which countries qualify as high-risk.",
+        "refused": false,
+        "cited_pages": [
+          43
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 4094,
+        "output_tokens": 230,
+        "generation_ms": 3063.89
+      },
+      {
+        "id": "pp-07",
+        "type": "paraphrase",
+        "question": "How should encryption keys be handled?",
+        "answer": "Establish and manage cryptographic keys according to organization-defined requirements for their generation, distribution, storage, access, and destruction. [1] Key management may use manual procedures or automated mechanisms supported by manual procedures, and should follow applicable laws, policies, regulations, and standards. [1]",
+        "refused": false,
+        "cited_pages": [
+          71
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 4073,
+        "output_tokens": 133,
+        "generation_ms": 2100.62
+      },
+      {
+        "id": "pp-08",
+        "type": "paraphrase",
+        "question": "Can staff work from home securely?",
+        "answer": "Yes. Staff can work from home if the organization allows the home as an alternate work site and applies its defined security requirements there; those requirements may depend on the work being done. [1]",
+        "refused": false,
+        "cited_pages": [
+          61
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 4037,
+        "output_tokens": 102,
+        "generation_ms": 2015.62
+      },
+      {
+        "id": "pp-09",
+        "type": "paraphrase",
+        "question": "What should we do about software the vendor no longer supports?",
+        "answer": "Replace software when its developer or vendor no longer provides support. If it cannot be replaced, arrange risk mitigation or continued support\u2014for example, develop in-house patches or contract an external support provider\u2014and consider isolating it or prohibiting connection to public or uncontrolled networks. [3][1]",
+        "refused": false,
+        "cited_pages": [
+          81,
+          80
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3965,
+        "output_tokens": 110,
+        "generation_ms": 2294.91
+      },
+      {
+        "id": "pp-10",
+        "type": "paraphrase",
+        "question": "How do we make sure system clocks are accurate for logs?",
+        "answer": "Use internal system clocks to generate audit-log timestamps, and define the required time-measurement granularity, including how closely system clocks should synchronize with reference clocks. Record timestamps in UTC, with a fixed local offset from UTC, or with the local offset included in the timestamp. [5]",
+        "refused": false,
+        "cited_pages": [
+          35
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3871,
+        "output_tokens": 142,
+        "generation_ms": 2360.65
+      },
+      {
+        "id": "nq-01",
+        "type": "natural",
+        "question": "How should passwords be protected?",
+        "answer": "Transmit passwords only over cryptographically protected channels and store them in cryptographically protected form, such as salted one-way hashes. Protect password content from unauthorized disclosure and modification. [1][2]",
+        "refused": false,
+        "cited_pages": [
+          46,
+          48
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3793,
+        "output_tokens": 117,
+        "generation_ms": 2319.85
+      },
+      {
+        "id": "nq-02",
+        "type": "natural",
+        "question": "How long should audit logs be kept?",
+        "answer": "Audit logs should be retained for a period consistent with the organization\u2019s records retention policy; the sources do not specify a fixed duration. [1]",
+        "refused": false,
+        "cited_pages": [
+          33
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3824,
+        "output_tokens": 62,
+        "generation_ms": 1451.4
+      },
+      {
+        "id": "nq-03",
+        "type": "natural",
+        "question": "What is required for multi-factor authentication?",
+        "answer": "Multi-factor authentication is required for access to both privileged and non-privileged user accounts, and it must use at least two different factors: something you know, something you have, or something you are. [1]",
+        "refused": false,
+        "cited_pages": [
+          44
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3626,
+        "output_tokens": 48,
+        "generation_ms": 1251.24
+      },
+      {
+        "id": "nq-04",
+        "type": "natural",
+        "question": "What must a system security plan contain?",
+        "answer": "A system security plan must contain:\n\n- The system\u2019s constituent components and the information types it processes, stores, and transmits. [3]\n- Specific threats of concern, the operational environment, and dependencies on or connections to other systems or components. [3]\n- An overview of the system\u2019s security requirements and the safeguards in place or planned to meet them. [3]\n- The individuals responsible for system roles, plus other relevant information needed to protect CUI. [3][1]\n- The system boundary and its relationships or connections to other systems. [2]",
+        "refused": false,
+        "cited_pages": [
+          79,
+          102,
+          78
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3613,
+        "output_tokens": 324,
+        "generation_ms": 3840.48
+      },
+      {
+        "id": "nq-05",
+        "type": "natural",
+        "question": "How often should security training be provided?",
+        "answer": "Security training should be provided at an organization-defined frequency. Security literacy training is given during initial training and thereafter at that frequency, and when system changes or specified events require it. [1] Role-based training is provided before access or assigned duties and thereafter at an organization-defined frequency. [2]",
+        "refused": false,
+        "cited_pages": [
+          29,
+          30
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3774,
+        "output_tokens": 96,
+        "generation_ms": 2260.63
+      },
+      {
+        "id": "nq-06",
+        "type": "natural",
+        "question": "What events should the system log?",
+        "answer": "Organizations should define and periodically review the event types to log, selecting those relevant to system security and auditing needs. Examples include password changes, use of privileged functions or administrative privileges, failed logons or access attempts, and use of third-party credentials. [1][2]",
+        "refused": false,
+        "cited_pages": [
+          31,
+          32
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3654,
+        "output_tokens": 121,
+        "generation_ms": 2157.3
+      },
+      {
+        "id": "nq-07",
+        "type": "natural",
+        "question": "How should CUI be protected when it is transmitted?",
+        "answer": "Use cryptographic mechanisms to prevent unauthorized disclosure of CUI during transmission, including over internal and external networks; TLS and IPsec are examples of mechanisms that can protect it.[5]",
+        "refused": false,
+        "cited_pages": [
+          70
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 4237,
+        "output_tokens": 92,
+        "generation_ms": 1876.43
+      },
+      {
+        "id": "nq-08",
+        "type": "natural",
+        "question": "What does the principle of least privilege require?",
+        "answer": "The principle of least privilege requires allowing users and processes only the access needed for their assigned tasks, authorizing access to specified security functions and security-relevant information, and reviewing, reassigning, or removing privileges as needed. [2] Privileged accounts should be restricted to designated personnel or roles, and users should use non-privileged accounts for non-security tasks. [1]",
+        "refused": false,
+        "cited_pages": [
+          21,
+          20
+        ],
+        "citation_hit": true,
+        "unsupported_citations": [],
+        "input_tokens": 3813,
+        "output_tokens": 164,
+        "generation_ms": 2308.12
+      },
+      {
+        "id": "oos-01",
+        "type": "out_of_scope",
+        "question": "What is the capital of France?",
+        "answer": "I can't answer that from the provided documents.",
+        "refused": true,
+        "cited_pages": [],
+        "citation_hit": false,
+        "unsupported_citations": [],
+        "input_tokens": 2775,
+        "output_tokens": 13,
+        "generation_ms": 1109.54
+      },
+      {
+        "id": "oos-02",
+        "type": "out_of_scope",
+        "question": "How much can a company be fined under GDPR?",
+        "answer": "I can't answer that from the provided documents.",
+        "refused": true,
+        "cited_pages": [],
+        "citation_hit": false,
+        "unsupported_citations": [],
+        "input_tokens": 3414,
+        "output_tokens": 13,
+        "generation_ms": 733.56
+      },
+      {
+        "id": "oos-03",
+        "type": "out_of_scope",
+        "question": "How do I reset my Windows password?",
+        "answer": "After account recovery, select a new password.[1] The provided documents don\u2019t explain how to reset a Windows password.",
+        "refused": false,
+        "cited_pages": [
+          46
+        ],
+        "citation_hit": false,
+        "unsupported_citations": [],
+        "input_tokens": 3281,
+        "output_tokens": 106,
+        "generation_ms": 2372.35
+      },
+      {
+        "id": "oos-04",
+        "type": "out_of_scope",
+        "question": "Who won the 2022 FIFA World Cup?",
+        "answer": "I can't answer that from the provided documents.",
+        "refused": true,
+        "cited_pages": [],
+        "citation_hit": false,
+        "unsupported_citations": [],
+        "input_tokens": 3373,
+        "output_tokens": 13,
+        "generation_ms": 770.91
+      },
+      {
+        "id": "oos-05",
+        "type": "out_of_scope",
+        "question": "What is the best programming language for beginners?",
+        "answer": "I can't answer that from the provided documents.",
+        "refused": true,
+        "cited_pages": [],
+        "citation_hit": false,
+        "unsupported_citations": [],
+        "input_tokens": 4085,
+        "output_tokens": 13,
+        "generation_ms": 999.14
+      }
+    ]
+  }
+}
