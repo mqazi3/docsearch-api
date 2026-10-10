@@ -63,6 +63,7 @@ services:
       UPLOAD_DIR: /data/uploads
       EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-openai}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      CHUNK_SPLIT_ON_HEADINGS: ${CHUNK_SPLIT_ON_HEADINGS:-false}
     volumes:
       - uploads:/data/uploads
     depends_on:

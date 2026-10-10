@@ -65,3 +65,16 @@ Cumulative vs baseline (hybrid, all): hit@1 0.583 → 0.694, hit@5 0.972 → 1.0
 Remaining gaps
 - Identifier hit@1 only 0.25: appendix tables mentioning the ID still outrank the definition (ranks 2-3).
 - Paraphrase MRR: hybrid 0.720 < vector-only 0.795; fusion adds keyword noise on long paraphrased questions.
+
+## 2026-10-10: Experiment 3, heading-aware chunking (rejected)
+Splitting at numbered headings: 159 → 305 chunks.
+Hybrid all: MRR 0.807 → 0.808 (flat), hit@5 1.0 → 0.972. Identifier MRR 0.583 → 0.500, keyword 1.0 → 0.95;
+natural 0.90 → 1.00, paraphrase 0.720 → 0.758. Failed the pre-set rule (hit@5 dropped; two types fell > 0.03).
+
+Why: vector-only improved substantially (MRR 0.639 → 0.718; paraphrase 0.795 → 0.883) because focused chunks
+embed more sharply, but keyword-only regressed (0.504 → 0.457). ts_rank_cd with default normalization favors
+long, term-dense chunks, so short focused definitions lost to ID-dense appendix tables.
+
+Follow-up hypothesis (not yet tested): length-normalized keyword ranking (ts_rank_cd normalization flag) with
+heading chunks. Needs a larger question set first to avoid overfitting 36 questions.
+Code kept behind CHUNK_SPLIT_ON_HEADINGS (default false); index reverted to 159 window chunks.

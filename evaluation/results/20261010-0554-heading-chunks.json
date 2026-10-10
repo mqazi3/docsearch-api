@@ -1,0 +1,641 @@
+{
+  "label": "heading-chunks",
+  "run_at": "2026-10-10T05:54:19+00:00",
+  "document": "Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations.pdf",
+  "retrieval": {
+    "n_questions": 36,
+    "metrics": {
+      "hybrid": {
+        "all": {
+          "n": 36,
+          "hit@1": 0.667,
+          "hit@5": 0.972,
+          "hit@10": 1.0,
+          "mrr@10": 0.808
+        },
+        "identifier": {
+          "n": 8,
+          "hit@1": 0.125,
+          "hit@5": 0.875,
+          "hit@10": 1.0,
+          "mrr@10": 0.5
+        },
+        "keyword": {
+          "n": 10,
+          "hit@1": 0.9,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.95
+        },
+        "natural": {
+          "n": 8,
+          "hit@1": 1.0,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 1.0
+        },
+        "paraphrase": {
+          "n": 10,
+          "hit@1": 0.6,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.758
+        }
+      },
+      "vector": {
+        "all": {
+          "n": 36,
+          "hit@1": 0.667,
+          "hit@5": 0.778,
+          "hit@10": 0.778,
+          "mrr@10": 0.718
+        },
+        "identifier": {
+          "n": 8,
+          "hit@1": 0.0,
+          "hit@5": 0.0,
+          "hit@10": 0.0,
+          "mrr@10": 0.0
+        },
+        "keyword": {
+          "n": 10,
+          "hit@1": 0.9,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.95
+        },
+        "natural": {
+          "n": 8,
+          "hit@1": 0.875,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.938
+        },
+        "paraphrase": {
+          "n": 10,
+          "hit@1": 0.8,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.883
+        }
+      },
+      "keyword": {
+        "all": {
+          "n": 36,
+          "hit@1": 0.333,
+          "hit@5": 0.583,
+          "hit@10": 0.639,
+          "mrr@10": 0.457
+        },
+        "identifier": {
+          "n": 8,
+          "hit@1": 0.125,
+          "hit@5": 0.875,
+          "hit@10": 1.0,
+          "mrr@10": 0.5
+        },
+        "keyword": {
+          "n": 10,
+          "hit@1": 0.7,
+          "hit@5": 1.0,
+          "hit@10": 1.0,
+          "mrr@10": 0.833
+        },
+        "natural": {
+          "n": 8,
+          "hit@1": 0.375,
+          "hit@5": 0.375,
+          "hit@10": 0.5,
+          "mrr@10": 0.391
+        },
+        "paraphrase": {
+          "n": 10,
+          "hit@1": 0.1,
+          "hit@5": 0.1,
+          "hit@10": 0.1,
+          "mrr@10": 0.1
+        }
+      }
+    },
+    "latency_ms": {
+      "embedding": {
+        "p50": 169.1,
+        "p95": 455.8
+      },
+      "hybrid": {
+        "p50": 52.2,
+        "p95": 58.9
+      },
+      "vector": {
+        "p50": 49.2,
+        "p95": 53.9
+      },
+      "keyword": {
+        "p50": 3.7,
+        "p95": 6.6
+      }
+    },
+    "per_question": [
+      {
+        "id": "id-01",
+        "type": "identifier",
+        "question": "03.05.03",
+        "relevant_pages": [
+          44,
+          45
+        ],
+        "ranks": {
+          "hybrid": 3,
+          "vector": null,
+          "keyword": 3
+        }
+      },
+      {
+        "id": "id-02",
+        "type": "identifier",
+        "question": "03.13.11",
+        "relevant_pages": [
+          71,
+          72
+        ],
+        "ranks": {
+          "hybrid": 6,
+          "vector": null,
+          "keyword": 6
+        }
+      },
+      {
+        "id": "id-03",
+        "type": "identifier",
+        "question": "03.01.08",
+        "relevant_pages": [
+          22,
+          23
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": null,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "id-04",
+        "type": "identifier",
+        "question": "03.14.02",
+        "relevant_pages": [
+          74,
+          75
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": null,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "id-05",
+        "type": "identifier",
+        "question": "03.03.03",
+        "relevant_pages": [
+          33
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": null,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "id-06",
+        "type": "identifier",
+        "question": "03.08.03",
+        "relevant_pages": [
+          55,
+          56
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": null,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "id-07",
+        "type": "identifier",
+        "question": "03.06.01",
+        "relevant_pages": [
+          49
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": null,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "id-08",
+        "type": "identifier",
+        "question": "03.17.01",
+        "relevant_pages": [
+          82,
+          83
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": null,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "kw-01",
+        "type": "keyword",
+        "question": "password management",
+        "relevant_pages": [
+          46,
+          47
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-02",
+        "type": "keyword",
+        "question": "unsuccessful logon attempts",
+        "relevant_pages": [
+          22,
+          23
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-03",
+        "type": "keyword",
+        "question": "media sanitization",
+        "relevant_pages": [
+          55,
+          56
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-04",
+        "type": "keyword",
+        "question": "system backup cryptographic protection",
+        "relevant_pages": [
+          58
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "kw-05",
+        "type": "keyword",
+        "question": "session termination",
+        "relevant_pages": [
+          24
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-06",
+        "type": "keyword",
+        "question": "flaw remediation",
+        "relevant_pages": [
+          73,
+          74
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 3
+        }
+      },
+      {
+        "id": "kw-07",
+        "type": "keyword",
+        "question": "audit record content",
+        "relevant_pages": [
+          32,
+          33
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-08",
+        "type": "keyword",
+        "question": "vulnerability monitoring and scanning",
+        "relevant_pages": [
+          64,
+          65
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 2
+        }
+      },
+      {
+        "id": "kw-09",
+        "type": "keyword",
+        "question": "incident response plan",
+        "relevant_pages": [
+          51,
+          52
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 2,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "kw-10",
+        "type": "keyword",
+        "question": "personnel screening",
+        "relevant_pages": [
+          58,
+          59
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "pp-01",
+        "type": "paraphrase",
+        "question": "How do we stop people from guessing passwords over and over?",
+        "relevant_pages": [
+          22,
+          23
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": 2,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-02",
+        "type": "paraphrase",
+        "question": "What should happen to old hard drives before we throw them away?",
+        "relevant_pages": [
+          55,
+          56
+        ],
+        "ranks": {
+          "hybrid": 4,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-03",
+        "type": "paraphrase",
+        "question": "Do screens need to lock when someone walks away from their computer?",
+        "relevant_pages": [
+          23,
+          24
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-04",
+        "type": "paraphrase",
+        "question": "What do we do when an employee quits or gets fired?",
+        "relevant_pages": [
+          59,
+          60
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-05",
+        "type": "paraphrase",
+        "question": "How should we protect our computers from viruses?",
+        "relevant_pages": [
+          74,
+          75
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-06",
+        "type": "paraphrase",
+        "question": "Should laptops taken on trips to risky countries be set up differently?",
+        "relevant_pages": [
+          42,
+          43
+        ],
+        "ranks": {
+          "hybrid": 2,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-07",
+        "type": "paraphrase",
+        "question": "How should encryption keys be handled?",
+        "relevant_pages": [
+          71
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-08",
+        "type": "paraphrase",
+        "question": "Can staff work from home securely?",
+        "relevant_pages": [
+          61,
+          62
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 3,
+          "keyword": null
+        }
+      },
+      {
+        "id": "pp-09",
+        "type": "paraphrase",
+        "question": "What should we do about software the vendor no longer supports?",
+        "relevant_pages": [
+          80,
+          81
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "pp-10",
+        "type": "paraphrase",
+        "question": "How do we make sure system clocks are accurate for logs?",
+        "relevant_pages": [
+          35,
+          36
+        ],
+        "ranks": {
+          "hybrid": 3,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "nq-01",
+        "type": "natural",
+        "question": "How should passwords be protected?",
+        "relevant_pages": [
+          46,
+          47,
+          48,
+          49
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "nq-02",
+        "type": "natural",
+        "question": "How long should audit logs be kept?",
+        "relevant_pages": [
+          33
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 2,
+          "keyword": null
+        }
+      },
+      {
+        "id": "nq-03",
+        "type": "natural",
+        "question": "What is required for multi-factor authentication?",
+        "relevant_pages": [
+          44,
+          45
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "nq-04",
+        "type": "natural",
+        "question": "What must a system security plan contain?",
+        "relevant_pages": [
+          78,
+          79
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "nq-05",
+        "type": "natural",
+        "question": "How often should security training be provided?",
+        "relevant_pages": [
+          29,
+          30,
+          31
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      },
+      {
+        "id": "nq-06",
+        "type": "natural",
+        "question": "What events should the system log?",
+        "relevant_pages": [
+          31,
+          32
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 1
+        }
+      },
+      {
+        "id": "nq-07",
+        "type": "natural",
+        "question": "How should CUI be protected when it is transmitted?",
+        "relevant_pages": [
+          70
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": 8
+        }
+      },
+      {
+        "id": "nq-08",
+        "type": "natural",
+        "question": "What does the principle of least privilege require?",
+        "relevant_pages": [
+          20,
+          21
+        ],
+        "ranks": {
+          "hybrid": 1,
+          "vector": 1,
+          "keyword": null
+        }
+      }
+    ]
+  }
+}
