@@ -42,6 +42,8 @@ services:
       UPLOAD_DIR: /data/uploads
       EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-openai}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANSWER_PROVIDER: ${ANSWER_PROVIDER:-openai}
+      ANSWER_MODEL: ${ANSWER_MODEL:-gpt-6-luna}
     ports:
       - "8000:8000"
     volumes:

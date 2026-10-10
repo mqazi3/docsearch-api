@@ -140,3 +140,8 @@ def test_search_still_works_when_cache_is_down(client, corpus):
     body = search(client, DOCS["audit.txt"], mode="vector")
 
     assert body["results"][0]["filename"] == "audit.txt"
+
+
+def test_unknown_document_filter_returns_404(client, corpus):
+    response = client.get("/search", params={"q": "system", "document_id": str(uuid.uuid4())})
+    assert response.status_code == 404

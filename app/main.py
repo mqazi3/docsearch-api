@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 
 from app.config import get_settings
-from app.routes import documents, health, search
+from app.routes import ask, documents, health, search
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,3 +21,4 @@ app = FastAPI(
 app.include_router(health.router)
 app.include_router(documents.router)
 app.include_router(search.router)
+app.include_router(ask.router)

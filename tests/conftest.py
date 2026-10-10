@@ -9,6 +9,7 @@ os.environ["DATABASE_URL"] = os.environ.get(
 )
 os.environ["UPLOAD_DIR"] = tempfile.mkdtemp(prefix="docsearch-test-uploads-")
 os.environ["EMBEDDING_PROVIDER"] = "fake"
+os.environ["ANSWER_PROVIDER"] = "fake"
 
 import pytest  # noqa: E402
 from alembic.config import Config  # noqa: E402
