@@ -35,7 +35,7 @@ class OpenAIEmbedder:
 
 
 class FakeEmbedder:
-    """Deterministic offline vectors for tests and local development. Not semantically meaningful."""
+    """Deterministic offline vectors for tests and local dev. Not semantically meaningful."""
 
     def embed(self, texts: list[str]) -> list[list[float]]:
         return [self._vector(text) for text in texts]
