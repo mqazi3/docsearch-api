@@ -27,6 +27,10 @@ class Settings(BaseSettings):
     openai_api_key: SecretStr | None = None
     chunk_size_tokens: int = 500
     chunk_overlap_tokens: int = 75
+    answer_provider: Literal["openai", "fake"] = "openai"
+    answer_model: str = "gpt-6-luna"
+    answer_max_output_tokens: int = 1000
+    ask_max_context_tokens: int = 6000
 
 
 @lru_cache

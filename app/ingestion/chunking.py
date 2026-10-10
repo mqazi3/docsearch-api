@@ -21,6 +21,10 @@ def _encoding() -> tiktoken.Encoding:
     return tiktoken.get_encoding("cl100k_base")
 
 
+def count_tokens(text: str) -> int:
+    return len(_encoding().encode(text, disallowed_special=()))
+
+
 def chunk_pages(pages: Iterable[Page], chunk_size: int, overlap: int) -> list[TextChunk]:
     """Split each page into overlapping token windows. Chunks never cross pages."""
     if chunk_size <= 0:

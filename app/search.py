@@ -9,6 +9,7 @@ import redis
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, defer
 
+from app.config import get_settings
 from app.embeddings import Embedder
 from app.models import Chunk, Document
 
@@ -130,3 +131,17 @@ def run_search(
     ).all()
     by_id = {chunk.id: (chunk, document) for chunk, document in rows}
     return [(hit, *by_id[hit.chunk_id]) for hit in hits if hit.chunk_id in by_id]
+
+
+def embedding_namespace() -> str:
+    """Cache namespace for query embeddings: changes whenever the provider or model does."""
+    settings = get_settings()
+    return f"{settings.embedding_provider}:{settings.embedding_model}"
+
+
+def missing_document_ids(db: Session, document_ids: list[uuid.UUID] | None) -> list[uuid.UUID]:
+    """Return any requested document IDs that don't exist."""
+    if not document_ids:
+        return []
+    found = set(db.scalars(select(Document.id).where(Document.id.in_(document_ids))))
+    return [d for d in document_ids if d not in found]
