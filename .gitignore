@@ -14,3 +14,12 @@ htmlcov/
 Thumbs.db
 *.log
 data/
+# Terraform
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/*.tfvars
+infra/tfplan
+
+# Production env file (generated on the server)
+.env.prod
