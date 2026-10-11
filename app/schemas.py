@@ -64,6 +64,11 @@ class SearchResponse(BaseModel):
 
 
 class AskRequest(BaseModel):
+    # Without an explicit example, Swagger fills document_ids with a placeholder UUID
+    # that doesn't exist, and the request fails with 404.
+    model_config = ConfigDict(
+        json_schema_extra={"examples": [{"question": "How often must audit logs be reviewed?"}]}
+    )
     question: str = Field(min_length=1, max_length=1000)
     k: int = Field(8, ge=1, le=20, description="Chunks to retrieve")
     document_ids: list[uuid.UUID] | None = None

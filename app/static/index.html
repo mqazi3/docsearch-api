@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DocSearch: cited answers from NIST SP 800-171</title>
+<meta name="description" content="Ask questions about NIST SP 800-171 Rev. 3 and get answers that cite the page they came from.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f4f6f8;
+    --sheet: #ffffff;
+    --ink: #18212b;
+    --muted: #5a6675;
+    --rule: #ccd4dd;
+    --navy: #1d3b5a;
+    --navy-hover: #142c45;
+    --mark: #ffe066;
+    --mark-soft: #fff6c7;
+    --error: #9b2c2c;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 1.0625rem/1.6 "Public Sans", system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.25rem 4rem; }
+  a { color: var(--navy); text-underline-offset: 0.18em; }
+  a:hover { color: var(--navy-hover); }
+  :focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+  h1 { font-size: 2.75rem; line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 0.75rem; }
+  h2 { font-size: 1.25rem; font-weight: 700; margin: 0 0 0.75rem; }
+  .lede { font-size: 1.1875rem; margin: 0 0 1rem; max-width: 38rem; }
+  .links { margin: 0 0 2.5rem; display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: 0.9375rem; }
+
+  form { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 1.25rem; }
+  label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+  textarea {
+    width: 100%; min-height: 5.25rem; resize: vertical;
+    font: inherit; color: inherit; line-height: 1.5;
+    padding: 0.625rem 0.75rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--sheet);
+  }
+  textarea:focus-visible { outline-offset: 0; }
+  .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.875rem; }
+  button { font: inherit; font-weight: 600; border-radius: 4px; padding: 0.5rem 1.125rem; cursor: pointer; }
+  button:disabled { opacity: 0.55; cursor: progress; }
+  .primary { background: var(--navy); color: #fff; border: 1px solid var(--navy); }
+  .primary:hover:not(:disabled) { background: var(--navy-hover); }
+  .secondary { background: transparent; color: var(--navy); border: 1px solid var(--navy); }
+
+  .examples { margin: 1.25rem 0 0; }
+  .examples p { margin: 0 0 0.5rem; color: var(--muted); font-size: 0.9375rem; }
+  .examples ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.375rem; }
+  .example {
+    background: none; border: none; padding: 0; font-weight: 400; text-align: left;
+    color: var(--navy); text-decoration: underline; text-underline-offset: 0.18em;
+  }
+  .example small { color: var(--muted); text-decoration: none; display: inline-block; margin-left: 0.375rem; }
+
+  .status { min-height: 1.6em; margin: 1.5rem 0 0; color: var(--muted); }
+  .status.error { color: var(--error); font-weight: 600; }
+
+  #result { margin-top: 1rem; }
+  .answer { font-size: 1.1875rem; line-height: 1.65; white-space: pre-line; margin: 0 0 0.5rem; }
+  .refused { border-left: 4px solid var(--rule); padding-left: 1rem; }
+  .refused-note { color: var(--muted); margin: 0 0 1.5rem; font-size: 0.9375rem; }
+  .cite {
+    display: inline-block; min-width: 1.4em; padding: 0 0.3em; margin: 0 0.1em;
+    background: var(--mark); color: var(--ink); text-decoration: none;
+    font-size: 0.8em; font-weight: 700; line-height: 1.5; text-align: center;
+    border-radius: 2px; vertical-align: 0.15em;
+  }
+  .cite:hover, .cite:focus-visible { background: var(--ink); color: var(--mark); }
+  .timing { color: var(--muted); font-size: 0.875rem; margin: 0 0 2rem; }
+
+  .sources { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+  .sources li {
+    display: grid; grid-template-columns: 4.75rem 1fr; gap: 0 1rem;
+    padding: 1rem 0.75rem; border-bottom: 1px solid var(--rule);
+    border-left: 4px solid transparent; transition: background-color 0.2s, border-color 0.2s;
+  }
+  .sources li.active { background: var(--mark-soft); border-left-color: var(--mark); }
+  .page { font-weight: 700; line-height: 1.3; }
+  .page span { display: block; font-weight: 400; color: var(--muted); font-size: 0.8125rem; }
+  .excerpt { margin: 0; font-size: 0.9375rem; color: #2c3743; overflow-wrap: anywhere; }
+  .how { margin: 0.375rem 0 0; color: var(--muted); font-size: 0.8125rem; }
+
+  .api { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+  .api p { margin: 0 0 1rem; max-width: 40rem; }
+  .keyline { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+  code, pre { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 0.875rem; }
+  .keyline code { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 0.375rem 0.625rem; overflow-wrap: anywhere; }
+  pre { background: var(--ink); color: #e6edf3; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 0 0 1rem; }
+  .small { color: var(--muted); font-size: 0.875rem; }
+
+  @media (max-width: 34rem) {
+    main { padding-top: 2rem; }
+    h1 { font-size: 2.125rem; }
+    .sources li { grid-template-columns: 1fr; gap: 0.25rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>DocSearch</h1>
+  <p class="lede">Ask a question about NIST SP 800-171 Rev. 3, the federal standard for protecting
+    controlled unclassified information. Every claim in the answer links to the page it came from,
+    and questions the document doesn't cover get a refusal instead of a guess.</p>
+  <p class="links">
+    <a href="https://github.com/mqazi3/docsearch-api">Source code on GitHub</a>
+    <a href="/docs">API reference</a>
+  </p>
+
+  <form id="ask-form">
+    <label for="question">Your question</label>
+    <textarea id="question" name="question" maxlength="500" required
+      placeholder="For example: how long should audit logs be kept?"></textarea>
+    <div class="actions">
+      <button type="submit" class="primary" id="ask-button">Get a cited answer</button>
+      <button type="button" class="secondary" id="search-button">Show matching passages</button>
+    </div>
+    <div class="examples">
+      <p>Or try one of these:</p>
+      <ul>
+        <li><button type="button" class="example">What should happen to old hard drives before we throw them away?</button></li>
+        <li><button type="button" class="example">How do we stop people from guessing passwords over and over?</button></li>
+        <li><button type="button" class="example">What does requirement 03.05.03 say?</button></li>
+        <li><button type="button" class="example" data-q="What is the capital of France?">What is the capital of France?<small>(not in the document)</small></button></li>
+      </ul>
+    </div>
+  </form>
+
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+  <section id="result" aria-live="polite"></section>
+
+  <section class="api" aria-labelledby="api-heading">
+    <h2 id="api-heading">Call the API directly</h2>
+    <div id="api-body"></div>
+  </section>
+</main>
+
+<script>
+const DEMO_KEY = __DEMO_KEY__;
+
+const form = document.getElementById("ask-form");
+const input = document.getElementById("question");
+const askButton = document.getElementById("ask-button");
+const searchButton = document.getElementById("search-button");
+const statusEl = document.getElementById("status");
+const resultEl = document.getElementById("result");
+
+function el(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [name, value] of Object.entries(attrs)) {
+    if (name === "className") node.className = value;
+    else node.setAttribute(name, value);
+  }
+  node.append(...children);
+  return node;
+}
+
+function setStatus(message, isError = false) {
+  statusEl.textContent = message;
+  statusEl.classList.toggle("error", isError);
+}
+
+function setBusy(busy) {
+  askButton.disabled = busy;
+  searchButton.disabled = busy;
+}
+
+function excerpt(text, limit = 320) {
+  const flat = text.replace(/\s+/g, " ").trim();
+  return flat.length > limit ? flat.slice(0, limit).trimEnd() + "…" : flat;
+}
+
+function errorMessage(response, maxChars) {
+  const wait = Number(response.headers.get("Retry-After") || 0);
+  switch (response.status) {
+    case 429:
+      return wait > 120
+        ? "The demo has reached today's question limit. It resets at midnight UTC."
+        : `The demo is busy. Try again in ${wait || 60} seconds.`;
+    case 422:
+      return `Questions need between 1 and ${maxChars} characters.`;
+    case 401:
+    case 403:
+      return "The demo key was rejected. The site owner needs to replace it.";
+    case 502:
+      return "The language model didn't respond. Try again in a moment.";
+    case 503:
+      return "The service is restarting. Try again in a moment.";
+    default:
+      return `The request failed with status ${response.status}. Try again.`;
+  }
+}
+
+async function callApi(path, options, maxChars) {
+  let response;
+  try {
+    response = await fetch(path, {
+      ...options,
+      headers: { "X-API-Key": DEMO_KEY, ...(options.headers || {}) },
+    });
+  } catch {
+    throw new Error("Couldn't reach the server. Check your connection and try again.");
+  }
+  if (!response.ok) throw new Error(errorMessage(response, maxChars));
+  return response.json();
+}
+
+// The model numbers sources by retrieval rank, so an answer can cite only "[4]".
+// Renumber in order of first appearance so readers see 1, 2, 3.
+function displayNumbers(text, known) {
+  const order = new Map();
+  for (const match of text.matchAll(/\[(\d+(?:\s*,\s*\d+)*)\]/g)) {
+    for (const n of match[1].split(",").map((s) => Number(s.trim()))) {
+      if (known.has(n) && !order.has(n)) order.set(n, order.size + 1);
+    }
+  }
+  for (const n of known) if (!order.has(n)) order.set(n, order.size + 1);
+  return order;
+}
+
+// Turn "[1]" and "[1, 2]" into highlighted links to the matching source.
+function citedText(text, order) {
+  const fragment = document.createDocumentFragment();
+  const parts = text.split(/\[(\d+(?:\s*,\s*\d+)*)\]/);
+  parts.forEach((part, i) => {
+    if (i % 2 === 0) {
+      if (part) fragment.append(part);
+      return;
+    }
+    for (const n of part.split(",").map((s) => Number(s.trim()))) {
+      if (!order.has(n)) continue; // invalid citation numbers are dropped from the display
+      const shown = order.get(n);
+      fragment.append(el("a", { href: `#source-${shown}`, className: "cite", "data-n": shown, "aria-label": `Source ${shown}` }, String(shown)));
+    }
+  });
+  return fragment;
+}
+
+function highlightSource(n, on) {
+  const item = document.getElementById(`source-${n}`);
+  if (item) item.classList.toggle("active", on);
+}
+
+function seconds(ms) {
+  return ms >= 1000 ? `${(ms / 1000).toFixed(1)} s` : `${Math.round(ms)} ms`;
+}
+
+function renderAnswer(data) {
+  resultEl.replaceChildren();
+  const known = new Set(data.citations.map((c) => c.number));
+  const order = displayNumbers(data.answer, known);
+
+  if (data.insufficient_context) {
+    resultEl.append(
+      el("p", { className: "answer refused" }, data.answer),
+      el("p", { className: "refused-note" },
+        "The retrieved passages don't answer this, so DocSearch declined rather than guess."),
+    );
+  } else {
+    resultEl.append(el("p", { className: "answer" }, citedText(data.answer, order)));
+  }
+
+  const timing = data.generation_ms > 0
+    ? `Found sources in ${seconds(data.retrieval_ms)}. Wrote the answer in ${seconds(data.generation_ms)}.`
+    : `Found sources in ${seconds(data.retrieval_ms)}.`;
+  resultEl.append(el("p", { className: "timing" }, timing));
+
+  if (data.citations.length) {
+    resultEl.append(el("h2", {}, data.citations.length === 1 ? "Source" : "Sources"));
+    const list = el("ol", { className: "sources" });
+    const ordered = [...data.citations].sort((a, b) => order.get(a.number) - order.get(b.number));
+    for (const c of ordered) {
+      const shown = order.get(c.number);
+      list.append(el("li", { id: `source-${shown}` },
+        el("div", { className: "page" }, `Page ${c.page_number ?? "?"}`, el("span", {}, `Source ${shown}`)),
+        el("p", { className: "excerpt" }, excerpt(c.excerpt)),
+      ));
+    }
+    resultEl.append(list);
+  }
+
+  resultEl.querySelectorAll(".cite").forEach((link) => {
+    const n = link.dataset.n;
+    for (const type of ["mouseenter", "focus"]) link.addEventListener(type, () => highlightSource(n, true));
+    for (const type of ["mouseleave", "blur"]) link.addEventListener(type, () => highlightSource(n, false));
+  });
+}
+
+function matchedBy(result) {
+  if (result.vector_rank && result.keyword_rank) return "Matched by keywords and meaning";
+  if (result.keyword_rank) return "Matched by keywords";
+  return "Matched by meaning";
+}
+
+function renderSearch(data) {
+  resultEl.replaceChildren();
+  if (!data.results.length) {
+    resultEl.append(el("p", {}, "No passages matched. Try different wording."));
+    return;
+  }
+  resultEl.append(
+    el("p", { className: "timing" }, `${data.results.length} passages in ${seconds(data.took_ms)}.`),
+  );
+  const list = el("ol", { className: "sources" });
+  for (const r of data.results) {
+    list.append(el("li", {},
+      el("div", { className: "page" }, `Page ${r.page_number ?? "?"}`),
+      el("div", {}, el("p", { className: "excerpt" }, excerpt(r.content)), el("p", { className: "how" }, matchedBy(r))),
+    ));
+  }
+  resultEl.append(list);
+}
+
+async function ask() {
+  const question = input.value.trim();
+  if (!question) { input.focus(); return; }
+  setBusy(true);
+  resultEl.replaceChildren();
+  setStatus("Finding sources and writing the answer. This takes a few seconds.");
+  try {
+    const data = await callApi("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    }, 1000);
+    setStatus("");
+    renderAnswer(data);
+  } catch (err) {
+    setStatus(err.message, true);
+  } finally {
+    setBusy(false);
+  }
+}
+
+async function search() {
+  const q = input.value.trim();
+  if (!q) { input.focus(); return; }
+  setBusy(true);
+  resultEl.replaceChildren();
+  setStatus("Searching the document.");
+  try {
+    const data = await callApi(`/search?${new URLSearchParams({ q, k: "5" })}`, {}, 500);
+    setStatus("");
+    renderSearch(data);
+  } catch (err) {
+    setStatus(err.message, true);
+  } finally {
+    setBusy(false);
+  }
+}
+
+form.addEventListener("submit", (event) => { event.preventDefault(); ask(); });
+searchButton.addEventListener("click", search);
+input.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); ask(); }
+});
+document.querySelectorAll(".example").forEach((button) => {
+  button.addEventListener("click", () => {
+    input.value = button.dataset.q || button.textContent.trim();
+    ask();
+  });
+});
+
+function renderApiSection() {
+  const body = document.getElementById("api-body");
+  if (!DEMO_KEY) {
+    body.append(el("p", {}, "The live demo is offline right now. The API reference still describes every endpoint."));
+    askButton.disabled = true;
+    searchButton.disabled = true;
+    document.querySelectorAll(".example").forEach((b) => { b.disabled = true; });
+    setStatus("The live demo is offline right now.", true);
+    return;
+  }
+  const copy = el("button", { type: "button", className: "secondary" }, "Copy key");
+  copy.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(DEMO_KEY);
+      copy.textContent = "Copied";
+    } catch {
+      copy.textContent = "Select the key to copy it";
+    }
+  });
+  const curl = `curl -X POST ${location.origin}/ask \\
+  -H "X-API-Key: ${DEMO_KEY}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"question": "How long should audit logs be kept?"}'`;
+  body.append(
+    el("p", {}, "This page uses a public, read-only demo key. It can search and ask but can't upload, and everyone using it shares a limit of 10 questions a minute."),
+    el("div", { className: "keyline" }, el("code", {}, DEMO_KEY), copy),
+    el("pre", {}, curl),
+    el("p", { className: "small" }, "Paste the key into Authorize on the API reference page to try every endpoint."),
+  );
+}
+
+renderApiSection();
+</script>
+</body>
+</html>

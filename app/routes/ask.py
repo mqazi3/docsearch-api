@@ -4,7 +4,7 @@ import redis
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.answering import AnswerGenerator, GenerationError, get_generator
+from app.answering import AnswerGenerator, GenerationError, best_excerpt, get_generator
 from app.cache import get_redis
 from app.db import get_db
 from app.embeddings import Embedder, get_embedder
@@ -76,7 +76,7 @@ def ask(
                 document_id=s.document_id,
                 filename=s.filename,
                 page_number=s.page_number,
-                excerpt=s.content[:EXCERPT_CHARS],
+                excerpt=best_excerpt(s.content, f"{body.question} {result.answer}", EXCERPT_CHARS),
             )
             for s in result.cited
         ],

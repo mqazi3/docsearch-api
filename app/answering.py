@@ -157,3 +157,55 @@ def extract_citations(answer: str, sources: list[Source]) -> tuple[list[Source],
 
 def is_refusal(answer: str) -> bool:
     return REFUSAL.rstrip(".").lower() in answer.lower()
+
+
+SENTENCE_BREAK = re.compile(r"(?<=[.;:!?])\s+")
+WORD = re.compile(r"[a-z0-9]+(?:[.-][a-z0-9]+)*")
+STOPWORDS = frozenset(
+    "about after also been before being both could does each from have into must only other "
+    "shall should such than that their them then there these they this those through under "
+    "were what when where which while with would your".split()
+)
+
+
+def _terms(text: str) -> set[str]:
+    return {w for w in WORD.findall(text.lower()) if len(w) >= 4 and w not in STOPWORDS}
+
+
+def best_excerpt(content: str, reference: str, limit: int = 300) -> str:
+    """Return the part of a chunk that best matches the answer, not just its first characters.
+
+    Chunks start wherever the token window started, often mid-way through an unrelated
+    requirement. Scoring sentences by word overlap with the answer picks the passage a
+    reader needs to see to check the claim.
+    """
+    flat = " ".join(content.split())
+    if len(flat) <= limit:
+        return flat
+
+    sentences = SENTENCE_BREAK.split(flat)
+    wanted = _terms(reference)
+    scores = [len(_terms(s) & wanted) for s in sentences]
+    best = max(range(len(sentences)), key=lambda i: (scores[i], -i))
+    if scores[best] == 0:
+        best = 0
+
+    # Grow around the best sentence: following context first, then preceding.
+    start, end = best, best + 1
+    excerpt = sentences[best]
+    while True:
+        if end < len(sentences) and len(excerpt) + 1 + len(sentences[end]) <= limit:
+            excerpt = f"{excerpt} {sentences[end]}"
+            end += 1
+        elif start > 0 and len(excerpt) + 1 + len(sentences[start - 1]) <= limit:
+            start -= 1
+            excerpt = f"{sentences[start]} {excerpt}"
+        else:
+            break
+
+    truncated = len(excerpt) > limit
+    if truncated:
+        excerpt = excerpt[:limit].rsplit(" ", 1)[0]
+    prefix = "…" if start > 0 else ""
+    suffix = "…" if truncated or end < len(sentences) else ""
+    return f"{prefix}{excerpt}{suffix}"
