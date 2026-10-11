@@ -1,0 +1,10 @@
+{$DOMAIN} {
+	encode zstd gzip
+
+	# Slightly above the API's 25 MB upload limit, so the API returns its own clear error.
+	request_body {
+		max_size 26MB
+	}
+
+	reverse_proxy api:8000
+}
