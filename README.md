@@ -90,3 +90,53 @@ The global daily cap on `/ask` puts a hard ceiling on LLM spend even if many key
 **Known trade-off:** a fixed window lets a client send up to 2× the limit across a window boundary. A sliding window or token bucket would fix that. At this traffic level, the simpler and cheaper implementation is the better call.
 
 **Not in scope:** key expiry and rotation, per-key custom quotas, OAuth/user accounts.
+
+## Deployment
+
+Live at **https://docsearch.mqazi98.com/docs**
+
+### Architecture
+One `t4g.small` EC2 instance (2 vCPU ARM, 2 GB RAM) runs the full stack in Docker Compose:
+Caddy (TLS) → FastAPI → Postgres + pgvector, Redis, and an RQ worker. Infrastructure is defined in
+Terraform (`infra/`): a dedicated VPC with one public subnet, a security group allowing only 80/443,
+an Elastic IP, and a Route 53 record.
+
+### Decisions
+- **No SSH.** Port 22 is closed; shell access goes through SSM Session Manager using IAM Identity
+  Center credentials with MFA. There's no key pair to leak and no port to scan.
+- **Secrets never touch Git or Terraform.** The OpenAI key and Postgres password live in SSM Parameter
+  Store (SecureString). The deploy script writes them to a root-only `.env.prod` on the host. Terraform
+  state stores values in plain text, so secrets stay out of it entirely.
+- **Only Caddy is exposed.** Postgres, Redis, and the API are reachable only on Docker's internal network.
+  Caddy obtains and renews Let's Encrypt certificates automatically and redirects HTTP to HTTPS.
+- **IMDSv2 required, encrypted root volume, standard CPU credits** (throttles instead of billing for
+  burst credits).
+- **Cost: about $5/month** (EBS + public IPv4; the instance is on AWS's t4g free trial through 2026).
+  The managed equivalent (ALB, NAT gateway, RDS, ElastiCache, Fargate) would cost over $100/month before
+  any traffic. Spending is capped by a $10 AWS budget alert, the API's 500-per-day `/ask` limit, and a
+  prepaid OpenAI balance with auto-reload off.
+
+### Production measurements (single requests, t4g.small)
+| Measurement | Value |
+|---|---|
+| Hybrid retrieval, cold (includes OpenAI embedding call) | ~1.4 s |
+| Hybrid retrieval, cached query embedding (Redis) | ~14 ms |
+| Identifier search (`03.05.03`, keyword-routed) | ~14 ms |
+| Answer generation | ~2.8–3.5 s |
+| Tokens per answer | ~3.7K input / ~60–90 output |
+| Cost per answer | ~$0.0004 |
+
+Single-request timings from the live deployment, not a load test. The evaluation harness above reports
+generation p50/p95 across the full 36-question set.
+
+### Verified
+- HTTP redirects to HTTPS; certificate issued by Let's Encrypt
+- Port 443 open; ports 22, 5432, and 6379 unreachable from the internet
+- Reader key: search and ask succeed, upload returns 403
+
+### Deploying
+    # on the server, via Session Manager:
+    sudo bash /opt/docsearch/deploy/deploy.sh          # pulls main, rebuilds, restarts
+
+### Teardown
+    cd infra && terraform destroy
