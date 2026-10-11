@@ -9,7 +9,7 @@ from app.db import SessionLocal
 from app.embeddings import FakeEmbedder, get_embedder
 from app.ingestion.pipeline import ingest_document
 from app.main import app
-from app.search import is_identifier_query, reciprocal_rank_fusion
+from app.search import identifier_terms, is_identifier_query, reciprocal_rank_fusion
 from app.storage import get_storage
 from tests.test_ingestion import make_document
 
@@ -190,3 +190,40 @@ def test_identifier_routing_skips_vector_leg(client, corpus, monkeypatch):
     assert embedder.calls == 0
     assert all(r["vector_rank"] is None for r in body["results"])
     assert body["results"][0]["filename"] == "mfa.txt"
+
+
+def test_identifier_terms_found_inside_sentences():
+    assert identifier_terms("What does requirement 03.05.03 say?") == ["03.05.03"]
+    assert identifier_terms('Compare "AC-2" with IA-05(01).') == ["AC-2", "IA-05(01)"]
+    assert identifier_terms("What changed in 2024 for the 10 families?") == []
+    assert identifier_terms("how long should audit logs be kept") == []
+
+
+def _ingest_identifier_corpus():
+    texts = {
+        "mfa.txt": b"Control 03.05.03 requires multi-factor authentication.",
+        "decoy.txt": b"Each requirement says what the requirement covers. "
+        b"Every requirement says who the requirement applies to.",
+    }
+    for filename, text in texts.items():
+        document_id = make_document(text, filename)
+        ingest_document(document_id, SessionLocal, get_storage(), FakeEmbedder())
+
+
+@pytest.mark.parametrize("enabled", [True, False])
+def test_identifier_in_sentence_drives_keyword_leg(client, monkeypatch, enabled):
+    monkeypatch.setattr(get_settings(), "identifier_terms_in_sentences", enabled)
+    _ingest_identifier_corpus()
+
+    body = search(client, "What does requirement 03.05.03 say?")  # hybrid
+    by_file = {r["filename"]: r for r in body["results"]}
+
+    if enabled:
+        # Keyword leg searched only "03.05.03": the decoy has no keyword rank.
+        assert body["results"][0]["filename"] == "mfa.txt"
+        assert by_file["mfa.txt"]["keyword_rank"] == 1
+        assert by_file["decoy.txt"]["keyword_rank"] is None
+        assert by_file["mfa.txt"]["vector_rank"] is not None  # vector leg still ran
+    else:
+        # Previous behavior: "requirement" and "say" put the decoy on the keyword leg.
+        assert by_file["decoy.txt"]["keyword_rank"] is not None

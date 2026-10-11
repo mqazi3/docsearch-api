@@ -6,6 +6,12 @@
 {"id": "id-06", "type": "identifier", "question": "03.08.03", "controls": ["03.08.03"]}
 {"id": "id-07", "type": "identifier", "question": "03.06.01", "controls": ["03.06.01"]}
 {"id": "id-08", "type": "identifier", "question": "03.17.01", "controls": ["03.17.01"]}
+{"id": "is-01", "type": "identifier_sentence", "question": "What does requirement 03.05.03 say?", "controls": ["03.05.03"]}
+{"id": "is-02", "type": "identifier_sentence", "question": "What is required by 03.01.08?", "controls": ["03.01.08"]}
+{"id": "is-03", "type": "identifier_sentence", "question": "Explain control 03.13.11.", "controls": ["03.13.11"]}
+{"id": "is-04", "type": "identifier_sentence", "question": "What does 03.08.03 require?", "controls": ["03.08.03"]}
+{"id": "is-05", "type": "identifier_sentence", "question": "Summarize requirement 03.14.02.", "controls": ["03.14.02"]}
+{"id": "is-06", "type": "identifier_sentence", "question": "What does 03.03.03 cover?", "controls": ["03.03.03"]}
 {"id": "kw-01", "type": "keyword", "question": "password management", "controls": ["03.05.07"]}
 {"id": "kw-02", "type": "keyword", "question": "unsuccessful logon attempts", "controls": ["03.01.08"]}
 {"id": "kw-03", "type": "keyword", "question": "media sanitization", "controls": ["03.08.03"]}

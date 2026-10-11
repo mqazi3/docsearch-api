@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     ask_max_context_tokens: int = 6000
     hybrid_keyword_any: bool = True
     identifier_routing: bool = True
+    identifier_terms_in_sentences: bool = True
     chunk_split_on_headings: bool = False
     rate_limit_search_per_minute: int = 60
     rate_limit_ask_per_minute: int = 10

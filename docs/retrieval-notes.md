@@ -78,3 +78,52 @@ long, term-dense chunks, so short focused definitions lost to ID-dense appendix 
 Follow-up hypothesis (not yet tested): length-normalized keyword ranking (ts_rank_cd normalization flag) with
 heading chunks. Needs a larger question set first to avoid overfitting 36 questions.
 Code kept behind CHUNK_SPLIT_ON_HEADINGS (default false); index reverted to 159 window chunks.
+
+## 2026-10-11: pp-02 citation miss (investigated, not fixed)
+Question: "What should happen to old hard drives before we throw them away?" Label: 03.08.03 Media
+Sanitization, PDF pp. 55-56.
+- Retrieval works: hybrid rank 3, vector rank 4, keyword not found (no shared vocabulary).
+- The answer is correct in substance (sanitize before disposal: destroy, cryptographically erase, clear, or
+  purge), but it cites a page-54 chunk instead of a page-55 chunk.
+- The label is correct. Page 54 holds 03.07.06 and 03.08.01; 03.08.03 starts on page 55. The miss is the
+  model choosing a neighboring source, not a labeling error.
+- Left as a known miss. Changing the prompt or the question set to fix one question would be overfitting.
+
+## 2026-10-11: Experiment 4, identifier terms inside sentences (adopted)
+Problem: bare IDs (`03.05.03`) route to keyword search (Experiment 2), but "What does requirement 03.05.03
+say?" took the normal hybrid path, and its keyword leg searched the whole sentence, so the ID was buried
+among common words.
+
+Change: `identifier_terms()` pulls tokens that contain a digit plus a letter, period, or hyphen out of the
+question. If any are found, the hybrid keyword leg searches only those terms (AND), while the vector leg still
+embeds the full question. Flag `IDENTIFIER_TERMS_IN_SENTENCES`, default on after this experiment.
+
+Question set: added 6 `identifier_sentence` questions (is-01 to is-06), for 42 in-scope total.
+
+Decision rule (set before running): adopt if identifier_sentence hybrid MRR improves and no other question
+type changes.
+
+Results (runs `in-sentence-off` vs `in-sentence-on`, confirmed by `exp4-final`)
+Hybrid identifier_sentence: hit@5 0.0 → 0.667, hit@10 0.167 → 1.0, MRR@10 0.021 → 0.202. hit@1 stays 0.
+
+| Question | Hybrid rank, off | Hybrid rank, on |
+|---|---|---|
+| is-01 What does requirement 03.05.03 say? | not in top 10 | 5 |
+| is-02 What is required by 03.01.08? | not in top 10 | 4 |
+| is-03 Explain control 03.13.11. | not in top 10 | 6 |
+| is-04 What does 03.08.03 require? | not in top 10 | 4 |
+| is-05 Summarize requirement 03.14.02. | not in top 10 | 7 |
+| is-06 What does 03.03.03 cover? | 8 | 5 |
+
+Hybrid all 42: hit@1 0.595 → 0.595, hit@5 0.857 → 0.952, hit@10 0.881 → 1.0, MRR@10 0.695 → 0.721.
+Every other type is identical, and keyword-only and vector-only rows don't change because the flag only
+affects the hybrid keyword leg. Passed the rule; adopted.
+
+Answers (`exp4-final`, flag on): 42/42 answered, 41/42 cite a labeled page (the miss is pp-02, above),
+0 unsupported citations, 4/5 out-of-scope refused (oos-03 "How do I reset my Windows password?" gets a
+partial answer citing pp. 46 and 48), generation p50/p95 2.0 s / 3.1 s, average 3,273 input / 112 output
+tokens. All six identifier_sentence answers cite the labeled page; is-01 now cites page 44 (03.05.03).
+
+Remaining gap: hit@1 is 0 because RRF interleaves the vector leg's results, which have nothing to do with
+the ID, above the correct page. Candidate Experiment 5: route ID-in-sentence questions keyword-only, as bare
+IDs already are. Expected to land near the bare-ID level (MRR ~0.58) but not yet tested.

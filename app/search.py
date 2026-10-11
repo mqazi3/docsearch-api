@@ -44,6 +44,21 @@ def is_identifier_query(query: str) -> bool:
     return IDENTIFIER_QUERY.fullmatch(query.strip()) is not None
 
 
+# An identifier inside a sentence: has a digit and a letter or separator, so plain
+# numbers ("10 questions", "2024") don't count. Matches 03.05.03, AC-2, IA-05(01).
+IDENTIFIER_TERM = re.compile(r"(?=.*\d)(?=.*[A-Za-z.\-])[A-Za-z0-9.\-()]+")
+
+
+def identifier_terms(query: str) -> list[str]:
+    """Identifier-like tokens in a query, with surrounding quotes and punctuation removed."""
+    terms = []
+    for raw in query.split():
+        token = raw.strip("\"'").rstrip("?!,;:.")
+        if IDENTIFIER_TERM.fullmatch(token):
+            terms.append(token)
+    return terms
+
+
 def reciprocal_rank_fusion(
     vector_ids: list[int], keyword_ids: list[int], k: int = RRF_K
 ) -> list[SearchHit]:
@@ -144,9 +159,18 @@ def run_search(
         query_vector = embed_query(query, embedder, cache, cache_namespace)
         vector_ids = vector_search(db, query_vector, CANDIDATES_PER_METHOD, document_ids)
     if mode in (SearchMode.HYBRID, SearchMode.KEYWORD):
+        keyword_query = query
         match_any = mode == SearchMode.HYBRID and get_settings().hybrid_keyword_any
+        # "What does requirement 03.05.03 say?": with OR matching, "requirement" matches
+        # most of the document and buries the one chunk that has the ID. Search the ID
+        # itself on the keyword leg; the vector leg still sees the whole question.
+        if mode == SearchMode.HYBRID and not route_to_keyword:
+            settings = get_settings()
+            terms = identifier_terms(query) if settings.identifier_terms_in_sentences else []
+            if terms:
+                keyword_query, match_any = " ".join(terms), False
         keyword_ids = keyword_search(
-            db, query, CANDIDATES_PER_METHOD, document_ids, match_any=match_any
+            db, keyword_query, CANDIDATES_PER_METHOD, document_ids, match_any=match_any
         )
 
     # With a single mode, RRF over one list simply preserves its order: one code path.
