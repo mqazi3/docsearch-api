@@ -14,11 +14,11 @@ and refuses when the document doesn't cover the question.
 
 | | |
 |---|---|
-| Retrieval quality | MRR@10 **0.716 → 0.807** (+12.7%) through three A/B-tested changes; hit@5 **1.000** |
-| Answers | 36/36 in-scope questions answered, **0 unsupported citations**, 4/5 out-of-scope questions refused |
+| Retrieval quality | MRR@10 **0.716 → 0.807** (+12.7%) on the original 36 questions through A/B-tested changes; a later change took questions that mention a requirement ID inside a sentence from **0.021 to 0.202** |
+| Answers | 42/42 in-scope questions answered, 41/42 cite a relevant page, **0 unsupported citations**, 4/5 out-of-scope questions refused |
 | Latency (production) | ~14 ms retrieval with a cached query embedding; ~3 s to generate an answer |
 | Cost | ~$5/month to host; ~$0.0004 per answer |
-| Tests | 89, run in CI against real Postgres + pgvector and Redis |
+| Tests | 92, run in CI against real Postgres + pgvector and Redis |
 
 The evaluation method and every experiment, including the one I rejected, are in [Evaluation](#evaluation).
 
@@ -47,7 +47,8 @@ flowchart LR
 **How a question is answered:** the question is embedded (or the embedding is read from the Redis
 cache), then searched two ways at once: by meaning with pgvector and by keywords with Postgres
 full-text search. The two rankings are merged with reciprocal rank fusion. Questions that look like
-requirement IDs (`03.05.03`) skip the embedding and go straight to keyword search. The top passages
+requirement IDs (`03.05.03`) skip the embedding and go straight to keyword search; when an ID appears
+inside a sentence ("What does 03.05.03 say?"), the keyword search looks for the ID alone. The top passages
 go to the model as numbered sources. Every citation in the answer is checked against the sources the
 model was actually given, and the response reports the page for each one.
 
@@ -78,14 +79,15 @@ Then open http://localhost:8000/docs, click **Authorize**, and paste the key.
 
 ## Evaluation
 
-A labeled set of 36 questions over NIST SP 800-171r3 (8 control-ID lookups, 10 keyword queries,
-10 paraphrases written to avoid the document's wording, 8 natural questions) plus 5 out-of-scope
-questions. Relevance is page-level: each question is labeled with control IDs, and the harness maps
+A labeled set of 42 questions over NIST SP 800-171r3 (8 bare control-ID lookups, 6 questions with a
+control ID inside a sentence, 10 keyword queries, 10 paraphrases written to avoid the document's
+wording, 8 natural questions) plus 5 out-of-scope questions. The six ID-in-sentence questions were
+added for Experiment 4; the first three experiments ran on the original 36. Relevance is page-level: each question is labeled with control IDs, and the harness maps
 controls to page spans from their headings, so labels survive re-chunking. The harness calls the same
 service functions as the API. Run it with `python -m evaluation.run_eval --label <name> [--answers]`;
 results are committed in `evaluation/results/`.
 
-### Retrieval (hybrid search, 36 questions)
+### Retrieval (hybrid search, original 36 questions)
 
 | Configuration | hit@1 | hit@5 | MRR@10 |
 |---|---|---|---|
@@ -101,18 +103,42 @@ chunking improved vector-only MRR (0.639 → 0.718) but regressed keyword rankin
 `ts_rank_cd`'s length bias; it failed the rule and is kept behind a flag, off. Re-running the
 restored configuration reproduced identical results.
 
-### Answers (`/ask`, current configuration)
+### Experiment 4: requirement IDs inside sentences (adopted)
+
+Bare IDs like `03.05.03` were already routed to keyword search, but a question like "What does
+requirement 03.05.03 say?" went through normal hybrid search, and the keyword leg searched every word
+in the sentence. The change pulls ID-shaped terms out of the question and has the keyword leg search
+only those; the vector leg still runs on the full question.
+
+| ID-in-sentence questions (6), hybrid | hit@1 | hit@5 | hit@10 | MRR@10 |
+|---|---|---|---|---|
+| Before | 0.000 | 0.000 | 0.167 | 0.021 |
+| **After (current)** | 0.000 | **0.667** | **1.000** | **0.202** |
+
+Every other question type scored identically with the change on and off. Across all 42 questions,
+hybrid MRR@10 went from 0.695 to 0.721 and hit@10 from 0.881 to 1.000. hit@1 is still 0: the correct
+page now ranks 4th to 7th because reciprocal rank fusion interleaves the vector leg's unrelated results
+above it. With the change on, all six questions produce answers that cite the labeled page. Details are
+in [retrieval-notes](docs/retrieval-notes.md).
+
+### Answers (`/ask`, current configuration, 42 questions)
 
 | Metric | Value |
 |---|---|
-| In-scope questions answered | 36/36 (100%) |
-| Citation accuracy (≥1 citation on a relevant page) | 35/36 (97.2%) |
+| In-scope questions answered | 42/42 (100%) |
+| Citation accuracy (≥1 citation on a relevant page) | 41/42 (97.6%) |
 | Unsupported citations | 0 |
 | Out-of-scope questions correctly refused | 4/5 (80%) |
-| Generation latency p50 / p95 | 2.1 s / 3.1 s |
+| Generation latency p50 / p95 | 2.0 s / 3.1 s |
+| Average tokens per answer | 3,273 input / 112 output |
 
-Answer metrics come from a non-deterministic model and vary slightly between runs (baseline run: 36/36 citation
-accuracy; final run: 35/36). Retrieval metrics are deterministic and reproduce exactly.
+The citation miss is "What should happen to old hard drives before we throw them away?" The answer is
+correct (sanitize before disposal), but it cites page 54 instead of the media sanitization requirement on
+page 55. The refusal miss is "How do I reset my Windows password?": instead of refusing, the model says
+the document has no Windows steps and then cites the document's password-recovery guidance.
+
+Answer metrics come from a non-deterministic model and vary slightly between runs. Retrieval metrics are
+deterministic and reproduce exactly.
 
 ### Latency
 Search (warm query cache): keyword ~4 ms, hybrid ~51 ms p50. Cold query embedding ~170 ms p50.
@@ -180,7 +206,7 @@ an Elastic IP, and a Route 53 record.
 | Cost per answer | ~$0.0004 |
 
 Single-request timings from the live deployment, not a load test. The evaluation harness above reports
-generation p50/p95 across the full 36-question set.
+generation p50/p95 across the full 42-question set.
 
 ### Verified
 - HTTP redirects to HTTPS; certificate issued by Let's Encrypt
