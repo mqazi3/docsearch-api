@@ -1,14 +1,67 @@
-# DocSearch API
+# DocSearch
 
-Backend service for document ingestion, hybrid (keyword + vector) search, and cited question answering.
+[![CI](https://github.com/mqazi3/docsearch-api/actions/workflows/ci.yml/badge.svg)](https://github.com/mqazi3/docsearch-api/actions/workflows/ci.yml)
 
-Status: in development.
+A question-answering API over long documents. It finds the relevant passages with hybrid
+keyword + vector search, answers with a language model that has to cite a page for every claim,
+and refuses when the document doesn't cover the question.
+
+**Try it:** **https://docsearch.mqazi98.com** (loaded with NIST SP 800-171 Rev. 3, a 120-page federal security standard)
+
+![Asking a question and getting a cited answer, then a refusal for an out-of-scope question](docs/demo.gif)
+
+## Results
+
+| | |
+|---|---|
+| Retrieval quality | MRR@10 **0.716 → 0.807** (+12.7%) through three A/B-tested changes; hit@5 **1.000** |
+| Answers | 36/36 in-scope questions answered, **0 unsupported citations**, 4/5 out-of-scope questions refused |
+| Latency (production) | ~14 ms retrieval with a cached query embedding; ~3 s to generate an answer |
+| Cost | ~$5/month to host; ~$0.0004 per answer |
+| Tests | 89, run in CI against real Postgres + pgvector and Redis |
+
+The evaluation method and every experiment, including the one I rejected, are in [Evaluation](#evaluation).
+
+## Architecture
+
+```mermaid
+flowchart LR
+    client["Browser or API client"] -->|HTTPS| caddy["Caddy: TLS"]
+    caddy --> api["FastAPI: auth, rate limits, /search, /ask"]
+    api -->|hybrid search| pg[("Postgres + pgvector: HNSW and full-text indexes")]
+    api -->|"embedding cache, rate limits, job queue"| redis[("Redis")]
+    api -->|"query embeddings, answers"| openai["OpenAI API"]
+    redis -->|ingestion jobs| worker["RQ worker: extract, chunk, embed"]
+    worker --> pg
+    worker -->|"chunk embeddings"| openai
+
+    subgraph ec2["AWS EC2 t4g.small, Docker Compose, provisioned with Terraform"]
+        caddy
+        api
+        pg
+        redis
+        worker
+    end
+```
+
+**How a question is answered:** the question is embedded (or the embedding is read from the Redis
+cache), then searched two ways at once: by meaning with pgvector and by keywords with Postgres
+full-text search. The two rankings are merged with reciprocal rank fusion. Questions that look like
+requirement IDs (`03.05.03`) skip the embedding and go straight to keyword search. The top passages
+go to the model as numbered sources. Every citation in the answer is checked against the sources the
+model was actually given, and the response reports the page for each one.
+
+**How a document is ingested:** an upload returns `202` immediately. A background worker extracts
+text page by page, splits it into 500-token chunks that never cross a page boundary, embeds them in
+batches, and writes them in one transaction. Failures caused by a bad file stop for good; failures
+from the network or the API retry with backoff.
 
 ## Run locally
 
     docker compose up --build
+    python -m app.cli create-key --name me --role admin
 
-Liveness: http://localhost:8000/health · Readiness: http://localhost:8000/health/ready · Docs: http://localhost:8000/docs
+Then open http://localhost:8000/docs, click **Authorize**, and paste the key.
 
 ## Design decisions
 
