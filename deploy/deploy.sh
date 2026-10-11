@@ -26,6 +26,7 @@ cat > .env.prod <<EOF
 DOMAIN=docsearch.mqazi98.com
 POSTGRES_PASSWORD=$(param /docsearch/postgres_password)
 OPENAI_API_KEY=$(param /docsearch/openai_api_key)
+PUBLIC_DEMO_KEY=$(param /docsearch/public_demo_key 2>/dev/null || true)
 EOF
 
 echo "==> Building and starting"

@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     rate_limit_search_per_minute: int = 60
     rate_limit_ask_per_minute: int = 10
     ask_daily_budget: int = 500
+    public_demo_key: SecretStr | None = None
 
 
 @lru_cache
