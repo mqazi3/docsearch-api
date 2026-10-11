@@ -66,6 +66,8 @@ services:
     image: docsearch-app
     restart: unless-stopped
     command: ["rq", "worker", "ingestion", "--with-scheduler", "--url", "redis://redis:6379/0"]
+    healthcheck:
+      disable: true
     environment: *app-env
     volumes:
       - uploads:/data/uploads

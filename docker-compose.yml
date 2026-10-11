@@ -57,6 +57,8 @@ services:
   worker:
     build: .
     command: ["rq", "worker", "ingestion", "--with-scheduler", "--url", "redis://redis:6379/0"]
+    healthcheck:
+      disable: true
     environment:
       DATABASE_URL: postgresql+psycopg://docsearch:docsearch@db:5432/docsearch
       REDIS_URL: redis://redis:6379/0
