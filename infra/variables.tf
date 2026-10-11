@@ -34,8 +34,8 @@ variable "repo_url" {
   default     = "https://github.com/mqazi3/docsearch-api.git"
 }
 
-variable "github_repo" {
-  description = "owner/name of the GitHub repository allowed to deploy"
+variable "github_oidc_subject" {
+  description = "Exact OIDC subject GitHub sends for pushes to main (uses immutable owner and repo IDs)"
   type        = string
-  default     = "mqazi3/docsearch-api"
+  default     = "repo:mqazi3@160351225/docsearch-api@1412519064:ref:refs/heads/main"
 }
