@@ -23,11 +23,12 @@ data "aws_iam_policy_document" "github_assume" {
       values   = ["sts.amazonaws.com"]
     }
 
-    # Only workflows running on the main branch of this repository.
+    # Only workflows on main of this exact repository. GitHub includes the account and
+    # repo IDs, so a different repo created later with the same name can't match.
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repo}:ref:refs/heads/main"]
+      values   = [var.github_oidc_subject]
     }
   }
 }
@@ -44,19 +45,22 @@ resource "aws_ssm_document" "deploy" {
   document_type   = "Command"
   document_format = "YAML"
 
-  content = <<-DOC
-    schemaVersion: "2.2"
-    description: Deploy the latest main branch of DocSearch.
-    mainSteps:
-      - action: aws:runShellScript
-        name: deploy
-        inputs:
-          timeoutSeconds: "900"
-          runCommand:
-            - export HOME=/root
-            - export PATH="$PATH:/snap/bin"
-            - bash /opt/docsearch/deploy/deploy.sh main
-  DOC
+  content = yamlencode({
+    schemaVersion = "2.2"
+    description   = "Deploy the latest main branch of DocSearch."
+    mainSteps = [{
+      action = "aws:runShellScript"
+      name   = "deploy"
+      inputs = {
+        timeoutSeconds = "900"
+        runCommand = [
+          "export HOME=/root",
+          "export PATH=\"$PATH:/snap/bin\"",
+          "bash /opt/docsearch/deploy/deploy.sh main",
+        ]
+      }
+    }]
+  })
 }
 
 data "aws_iam_policy_document" "github_deploy" {
