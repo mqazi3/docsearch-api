@@ -29,6 +29,10 @@ OPENAI_API_KEY=$(param /docsearch/openai_api_key)
 PUBLIC_DEMO_KEY=$(param /docsearch/public_demo_key 2>/dev/null || true)
 EOF
 
+if ! grep -q '^PUBLIC_DEMO_KEY=.' .env.prod; then
+  echo "WARNING: /docsearch/public_demo_key is missing or empty; the demo page will show as offline."
+fi
+
 echo "==> Building and starting"
 "${COMPOSE[@]}" up -d --build --remove-orphans
 docker image prune -f > /dev/null
