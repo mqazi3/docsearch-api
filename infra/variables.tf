@@ -33,3 +33,9 @@ variable "repo_url" {
   type        = string
   default     = "https://github.com/mqazi3/docsearch-api.git"
 }
+
+variable "github_repo" {
+  description = "owner/name of the GitHub repository allowed to deploy"
+  type        = string
+  default     = "mqazi3/docsearch-api"
+}
