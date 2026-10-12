@@ -229,9 +229,18 @@ generation p50/p95 across the full 42-question set.
 - Port 443 open; ports 22, 5432, and 6379 unreachable from the internet
 - Reader key: search and ask succeed, upload returns 403
 
-### Deploying
-    # on the server, via Session Manager:
-    sudo bash /opt/docsearch/deploy/deploy.sh          # pulls main, rebuilds, restarts
+### Continuous deployment
+Every push to `main` runs CI (ruff, migrations, 92 tests against Postgres + pgvector and Redis). When CI
+passes, the [Deploy workflow](.github/workflows/deploy.yml) deploys automatically:
+
+1. GitHub Actions gets a short-lived OIDC token and assumes an AWS role. No AWS keys are stored in GitHub.
+2. The role can do one thing: run one SSM command document on this one instance (defined in `infra/deploy.tf`).
+   Its trust policy only accepts workflows on `main` of this repository.
+3. The server pulls `main`, rebuilds, runs migrations, and restarts the stack.
+4. The workflow checks `https://docsearch.mqazi98.com/health/ready` and fails if the site doesn't come back.
+
+A deploy takes about 40 seconds from merge to live. To deploy by hand, run the workflow from the Actions
+tab, or on the server via Session Manager: `sudo bash /opt/docsearch/deploy/deploy.sh`.
 
 ### Teardown
     cd infra && terraform destroy
