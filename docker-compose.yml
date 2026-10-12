@@ -72,7 +72,7 @@ services:
       migrate:
         condition: service_completed_successfully
       redis:
-        condition: service_healthy      
+        condition: service_healthy
 
 volumes:
   pgdata:
