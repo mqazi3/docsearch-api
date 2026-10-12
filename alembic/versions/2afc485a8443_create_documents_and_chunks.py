@@ -1,7 +1,7 @@
 """create documents and chunks
 
 Revision ID: 2afc485a8443
-Revises: 
+Revises:
 Create Date: 2026-10-09 19:02:36.171428
 
 """

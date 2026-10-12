@@ -64,6 +64,21 @@ from the network or the API retry with backoff.
 
 Then open http://localhost:8000/docs, click **Authorize**, and paste the key.
 
+### Development
+
+    python -m venv .venv
+    .venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
+    pip install -r requirements-dev.txt
+    pre-commit install
+
+Dependencies are declared in `requirements.in` and `requirements-dev.in`, then compiled to exact
+versions with `uv pip compile --universal`. The Docker image, CI, and local installs all get the same
+versions, on Linux and Windows. To upgrade, recompile both files with `--upgrade`, run the tests,
+and commit the results together.
+
+Pre-commit runs ruff (lint and format), gitleaks (secret scanning), private-key detection, YAML checks,
+and whitespace fixes before every commit.
+
 ## Design decisions
 
 - **Separate liveness and readiness checks.** Liveness checks nothing external, so a database outage doesn't trigger container restarts; readiness returns 503 when a dependency is down so load balancers stop routing traffic.
@@ -76,6 +91,7 @@ Then open http://localhost:8000/docs, click **Authorize**, and paste the key.
 - **Explicit refusals.** The model must reply with a fixed sentence when sources don't contain the answer; with no retrieved sources, the API refuses without calling the model at all.
 - **Prompt-injection hygiene.** Document text is wrapped in `<source>` tags, marked as data rather than instructions, and prevented from closing its own tag.
 - **Separated latency.** Responses report `retrieval_ms` and `generation_ms` independently; upstream LLM failures return 502.
+- **Pinned, reproducible builds.** Every direct and transitive dependency is pinned; dev pins are constrained to production pins, so CI tests exactly what ships.
 
 ## Evaluation
 
