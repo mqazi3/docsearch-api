@@ -12,7 +12,7 @@ and refuses when the document doesn't cover the question.
 
 ## Results
 
-| | |
+| Metric | Result |
 |---|---|
 | Retrieval quality | MRR@10 **0.716 → 0.807** (+12.7%) on the original 36 questions through A/B-tested changes; a later change took questions that mention a requirement ID inside a sentence from **0.021 to 0.202** |
 | Answers | 42/42 in-scope questions answered, 41/42 cite a relevant page, **0 unsupported citations**, 4/5 out-of-scope questions refused |
@@ -59,17 +59,21 @@ from the network or the API retry with backoff.
 
 ## Run locally
 
-    docker compose up --build
-    python -m app.cli create-key --name me --role admin
+```bash
+docker compose up --build
+python -m app.cli create-key --name me --role admin
+```
 
 Then open http://localhost:8000/docs, click **Authorize**, and paste the key.
 
 ### Development
 
-    python -m venv .venv
-    .venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
-    pip install -r requirements-dev.txt
-    pre-commit install
+```bash
+python -m venv .venv
+.venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
+pip install -r requirements-dev.txt
+pre-commit install
+```
 
 Dependencies are declared in `requirements.in` and `requirements-dev.in`, then compiled to exact
 versions with `uv pip compile --universal`. The Docker image, CI, and local installs all get the same
@@ -243,4 +247,7 @@ A deploy takes about 40 seconds from merge to live. To deploy by hand, run the w
 tab, or on the server via Session Manager: `sudo bash /opt/docsearch/deploy/deploy.sh`.
 
 ### Teardown
-    cd infra && terraform destroy
+
+```bash
+cd infra && terraform destroy
+```
