@@ -3,13 +3,15 @@ from functools import lru_cache
 from pathlib import Path
 
 from fastapi import APIRouter, Depends
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 
 from app.config import Settings, get_settings
 
 router = APIRouter(include_in_schema=False)
 
-PAGE_PATH = Path(__file__).resolve().parent.parent / "static" / "index.html"
+STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
+PAGE_PATH = STATIC_DIR / "index.html"
+OG_IMAGE_PATH = STATIC_DIR / "og-image.png"
 KEY_PLACEHOLDER = "__DEMO_KEY__"
 
 
@@ -28,3 +30,13 @@ def landing_page(settings: Settings = Depends(get_settings)) -> HTMLResponse:
     literal = json.dumps(key).replace("</", "<\\/")
     page = _page_template().replace(KEY_PLACEHOLDER, literal)
     return HTMLResponse(page, headers={"Cache-Control": "no-store"})
+
+
+@router.get("/og-image.png")
+def og_image() -> FileResponse:
+    """Link-preview image that LinkedIn, Slack, and similar sites read from the og:image tag."""
+    return FileResponse(
+        OG_IMAGE_PATH,
+        media_type="image/png",
+        headers={"Cache-Control": "public, max-age=86400"},
+    )
