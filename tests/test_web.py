@@ -7,6 +7,13 @@ def test_landing_page_needs_no_api_key(anon_client):
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/html")
     assert "DocSearch" in response.text
+    # Link previews (LinkedIn, Slack) need an absolute og:image URL that actually serves a PNG.
+    og_tag = 'property="og:image" content="https://docsearch.mqazi98.com/og-image.png"'
+    assert og_tag in response.text
+    image = anon_client.get("/og-image.png")
+    assert image.status_code == 200
+    assert image.headers["content-type"] == "image/png"
+    assert image.content.startswith(b"\x89PNG")
 
 
 def test_landing_page_embeds_public_demo_key(anon_client):
