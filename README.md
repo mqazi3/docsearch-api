@@ -251,3 +251,7 @@ tab, or on the server via Session Manager: `sudo bash /opt/docsearch/deploy/depl
 ```bash
 cd infra && terraform destroy
 ```
+
+## How this was built
+
+I built DocSearch solo, using Claude as a pair programmer for drafting code. I ran and tested every stage, chose the experiment decision rules, ran the evaluations, deployed it to AWS, and debugged the problems that came up. One example: the first auto-deploy failed with AccessDenied, and I traced it in CloudTrail to GitHub's ID-based OIDC subject claim. Every change went through a pull request and CI.
